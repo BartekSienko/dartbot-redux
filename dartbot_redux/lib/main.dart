@@ -1,7 +1,8 @@
+import 'package:dartbot_redux/frontend/mainmenu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MainMenu());
 }
 
 class MyApp extends StatelessWidget {
