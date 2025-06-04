@@ -102,9 +102,9 @@ int getHighestFromList(List<int> list) {
 
   @override
   String toString() {
-    return "\n3-dart Average: ${getListAverage(scores)}\nFirst 9 avr.: ${getListAverage(first9scores)}" +
-           "\nCheckout Rate: ${getCheckoutRate()} %\nCheckouts: ${getCheckoutSplit()}" +
-           "\nHighest Score: ${getHighestFromList(scores)}\nHighest Checkout: ${getHighestFromList(checkouts)}" +
+    return "\n3-dart Average: ${getListAverage(scores)}\nFirst 9 avr.: ${getListAverage(first9scores)}" 
+           "\nCheckout Rate: ${getCheckoutRate()} %\nCheckouts: ${getCheckoutSplit()}"
+           "\nHighest Score: ${getHighestFromList(scores)}\nHighest Checkout: ${getHighestFromList(checkouts)}"
            "\nBest Leg: $bestLeg darts\nWorst Leg: $worstLeg darts";
   }
   

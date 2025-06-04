@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_this
+// ignore_for_file: unnecessary_this, avoid_print
 
 import 'dart:collection';
 import 'dart:io';
@@ -184,7 +184,7 @@ class DartPlayer {
   }
 
   String toStringSetPlay() {
-        return "(" + this.sets.toString() + ") " + "(" + this.legs.toString() + ")  " + this.score.toString() + "  " + this.name;
+        return "(${this.sets}) (${this.legs})  ${this.score}  ${this.name}";
     }
 
   String toStringStats() {

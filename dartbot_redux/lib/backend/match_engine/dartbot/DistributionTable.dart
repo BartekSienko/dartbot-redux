@@ -169,7 +169,7 @@ class DistributionTable {
         try {
             leftOfAimed = this.fields[(fields.indexOf(aimedNumber) - 1)];
             leftOfLeft = fields[(fields.indexOf(aimedNumber) - 2)];
-        } on Exception {
+        } on RangeError {
             leftOfAimed = fields[(fields.lastIndexOf(aimedNumber) - 1)];
             leftOfLeft = fields[(fields.lastIndexOf(aimedNumber) - 2)];
         }
@@ -191,6 +191,11 @@ class DistributionTable {
             return scores[index];
             
         }
+    }
+
+    @override
+    String toString() {
+      return "$identifier: $table";
     }
 
 }
