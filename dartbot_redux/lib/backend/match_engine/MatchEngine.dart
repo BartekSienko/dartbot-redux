@@ -1,5 +1,9 @@
 // ignore_for_file: unnecessary_this
 
+import 'dart:io';
+
+import 'dartbot/DartBot.dart';
+
 import 'DartPlayer.dart';
 import 'MatchLogic.dart';
 
@@ -38,15 +42,14 @@ class MatchEngine {
     void playLeg(bool ifQuickSim) {
         this.newLeg();
         int playerToThrow = this.onThrow;
-        Scanner sc = new Scanner(System.in);
         while (this.player1.score > 0 && this.player2.score > 0) {
             if (playerToThrow == 1) {
                 bool doubleInOpener = this.matchRules.ifDoubleIn() && this.player1.score == this.matchRules.getStartScore();
-                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut(), doubleInOpener);
+                this.player1.visitThrow(this.matchRules.ifDoubleOut(), doubleInOpener);
                 playerToThrow = 2;
             } else {
                 bool doubleInOpener = this.matchRules.ifDoubleIn() && this.player2.score == this.matchRules.getStartScore();
-                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut(), doubleInOpener);
+                this.player2.visitThrow(this.matchRules.ifDoubleOut(), doubleInOpener);
                 playerToThrow = 1;
             }
 
@@ -165,7 +168,6 @@ class MatchEngine {
     @override
     int get hashCode {
       return this.player1.hashCode + this.player2.hashCode;
-}
-
-
+  }
+    
 }

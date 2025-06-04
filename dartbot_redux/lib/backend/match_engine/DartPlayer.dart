@@ -27,16 +27,16 @@ class DartPlayer {
   }
 
   /// TODO: Rewrite function when connecting to frontend (Visits)
-  void visitThrow(Scanner sc, bool isDoubleOut, bool isDoubleIn) {
+  void visitThrow(bool isDoubleOut, bool isDoubleIn) {
     int pointsScored = 0;
     bool legalScore = false;
     print('$name to throw: ');
     while (!legalScore) {
-      if (sc.hasNextInt()) {
-        pointsScored = sc.nextInt();
+      int? input = int.tryParse(stdin.readLineSync()!);
+      if (input is int) {
+        pointsScored = input;
         legalScore = true;
       } else {
-        sc.next();
         legalScore = false;
         continue;
       }
@@ -48,16 +48,16 @@ class DartPlayer {
       }
     }
 
-    int dartsAtDouble = visitDoubles(sc, pointsScored);
+    int dartsAtDouble = visitDoubles(pointsScored);
     stats.doublesAttempted += dartsAtDouble;
-    int dartsAtCheckout = visitCheckout(sc, pointsScored, dartsAtDouble);
+    int dartsAtCheckout = visitCheckout(pointsScored, dartsAtDouble);
 
     score -= pointsScored;
     dartThrow(pointsScored, isDoubleOut, dartsAtCheckout);
   }
 
   /// TODO: Rewrite function when connecting to frontend (Doubles)
-  int visitDoubles(Scanner sc, int pointsScored) {
+  int visitDoubles(int pointsScored) {
     Set<int> possibleDartsAtDouble = getPossibleDartsAtDouble(pointsScored);
     Set<int> impossibleCheckouts = HashSet.from([169, 168, 166, 165, 163, 162, 159]);
     if ((score - pointsScored) >= 50 || (impossibleCheckouts.contains(score) || score > 170)) {
@@ -71,10 +71,9 @@ class DartPlayer {
     } else {
       print('How many darts at double? ${possibleDartsAtDouble.toString()}');
       while (!possibleDartsAtDouble.contains(dartsAtDouble)) {
-        if (sc.hasNextInt()) {
-          dartsAtDouble = sc.nextInt();
-        } else {
-          sc.next();
+        int? input = int.tryParse(stdin.readLineSync()!);
+        if (input is int) {
+          dartsAtDouble = input;
         }
       }
     }
@@ -82,7 +81,7 @@ class DartPlayer {
   }
 
   /// TODO: Rewrite function when connecting to frontend (Checkouts)
-  int visitCheckout(Scanner sc, int pointsScored, int dartsAtDouble) {
+  int visitCheckout(int pointsScored, int dartsAtDouble) {
     if (score != pointsScored) {
       return 0;
     }
@@ -93,10 +92,9 @@ class DartPlayer {
       int dartsAtCheckout = 99;
       print('How many darts at checkout? ${possibleDartsAtCheckout.toString()}');
       while (!possibleDartsAtCheckout.contains(dartsAtCheckout)) {
-        if (sc.hasNextInt()) {
-          dartsAtCheckout = sc.nextInt();
-        } else {
-          sc.next();
+        int? input = int.tryParse(stdin.readLineSync()!);
+        if (input is int) {
+          dartsAtCheckout = input;
         }
       }
       return dartsAtCheckout;
