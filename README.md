@@ -3,4 +3,4 @@ A refactored version of 'dartbot' recoded in Dart/Flutter instead of Java/Kotlin
 
 Current progress:
 - Starting off the app UI
-- None of the backend code has been refactored :/
+- Current backend progress (Translated: 8/16 files, Refactored: 0/16 files)
