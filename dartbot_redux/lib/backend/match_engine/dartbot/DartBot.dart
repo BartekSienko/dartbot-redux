@@ -163,6 +163,42 @@ class DartBot extends DartPlayer {
         // If somehow a ThrowTarget wasn't found, throw a RuntineException
         throw Exception("Didn't create target for score: " + this.score.toString() + " with " + this.dartsInHand.toString() + " darts left");
     }
+
+    int oneDartThrow(bool isDoubleIn) {
+        ThrowTarget target = getThrowTarget(isDoubleIn);
+        DistributionTable distroTable;
+        if (target.number == 25) {
+            distroTable = this.distroTables[3];
+            if (this.score == 50) {
+                this.stats.doublesAttempted++;
+            }
+        } else if (target.multiplier == 3) {
+            distroTable = this.distroTables[0];
+        } else if (target.multiplier == 2) {
+            distroTable = this.distroTables[1];
+            if (this.score <= 40) {
+                this.stats.doublesAttempted++;
+            }
+        } else {
+            distroTable = this.distroTables[2];
+        }
+
+        int rng = Random().nextInt(1000);
+
+        return distroTable.getThrowResult(rng, target.number);
+    }
+
+    @override
+    String toString() {
+        return "(" + this.legs.toString() + ")  " + this.score.toString() + "  " + this.name + " (Bot)";
+    }
+
+    @override
+    String toStringSetPlay() {
+        return "(" + this.sets.toString() + ") " + "(" + this.legs.toString() + ")  " + this.score.toString() + "  " + this.name + " (Bot)";
+    }
+
+
 }
 
 
