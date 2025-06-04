@@ -1,0 +1,78 @@
+// ignore_for_file: unnecessary_this
+
+import 'dart:math';
+
+class ThrowTarget {
+  int multiplier;
+  int number;
+
+  ThrowTarget(this.multiplier, this.number);
+
+  String translateMultiplier() {
+        if (this.multiplier == 3) {
+            return "Treble";
+        } else if (this.multiplier == 2 && this.number != 25) {
+            return "Double";
+        } else if (this.multiplier == 1) {
+            return "Single";
+        } else if (this.multiplier == 2 && this.number == 25) {
+            return "Bullseye";
+        }
+        /// FIXME: Change into a runtime exception
+        throw Exception("Illegal Multiplier located");
+    }
+
+    ThrowTarget getVariance(int dartsInHand, int scoreThisVisit) {
+        // If its the first dart, no variance
+        double rng = 0.0; /// FIXME: ADD RNG BETWEEN 0 and 1
+        switch (dartsInHand) {
+            case 2:
+                if ((scoreThisVisit == 60 && rng >= 0.8) || rng >= 0.5) {
+                    this.number = 19; 
+                }
+            case 1:
+                if ((scoreThisVisit == 120) && rng >= 0.9 || (0.3 <= rng && rng < 0.7)) {
+                    this.number = 19;
+                } else if (rng >= 0.70) {
+                    this.number = 18;
+                }
+            default:
+                return this;
+        }
+        return this;
+    }
+
+    @override
+    String toString() {
+      /// FIXME: Change into a runtime exception
+        if ((this.number > 20 && this.number != 25) || this.number < 0) {
+            throw new Exception("Illegal Number Located");
+        }
+        if (this.multiplier == 3) {
+            return "Treble " + this.number.toString();
+        } else if (this.multiplier == 2 && this.number != 25) {
+            return "Double " + this.number.toString();
+        } else if (this.multiplier == 1) {
+            return "Single " + this.number.toString();
+        } else if (this.multiplier == 2 && this.number == 25) {
+            return "Bullseye";
+        }
+        throw new Exception("Illegal Multiplier located");
+    }
+
+
+    @override
+    int get hashCode {
+        return this.number + this.multiplier;
+    }
+
+    @override
+    bool operator ==(Object other) {
+      if (identical(this, other)) return true;
+      if (other is! ThrowTarget) return false;
+      return this.number == other.number 
+          && this.multiplier == other.multiplier;
+
+    }
+
+}
