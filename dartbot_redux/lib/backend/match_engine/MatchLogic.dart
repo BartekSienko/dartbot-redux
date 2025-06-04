@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this
+
 import 'dart:io';
 
 class MatchLogic {
