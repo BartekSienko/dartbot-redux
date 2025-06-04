@@ -164,6 +164,32 @@ class DartBot extends DartPlayer {
         throw Exception("Didn't create target for score: " + this.score.toString() + " with " + this.dartsInHand.toString() + " darts left");
     }
 
+    @override
+    void visitThrow(bool isDoubleOut, bool isDoubleIn) {
+        this.dartsInHand = 3;
+        int scoreBeforeVisit = this.score;
+        this.scoreThisVisit = 0;
+        while (dartsInHand > 0) {
+            int currentThrow = oneDartThrow(isDoubleIn);
+            this.scoreThisVisit += currentThrow;
+            this.score -= currentThrow;
+            this.dartsInHand--;
+            if (this.score == 1 || this.score < 0 || (this.score == 0 
+                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn))) {
+                this.score = scoreBeforeVisit;
+                this.dartThrow(0, isDoubleOut, 3);
+                print("Bust score!"); // Removed for QuickSims
+                return;
+            } else if ((this.score) == 0) {
+                break;
+            }
+        }
+
+        this.dartThrow(this.scoreThisVisit, isDoubleOut, 3 - dartsInHand);
+
+    }
+
+
     int oneDartThrow(bool isDoubleIn) {
         ThrowTarget target = getThrowTarget(isDoubleIn);
         DistributionTable distroTable;
