@@ -2,6 +2,8 @@
 
 
 
+import 'dart:math';
+
 class ThrowTarget {
   int multiplier;
   int number;
@@ -24,7 +26,7 @@ class ThrowTarget {
 
     ThrowTarget getVariance(int dartsInHand, int scoreThisVisit) {
         // If its the first dart, no variance
-        double rng = 0.0; /// FIXME: ADD RNG BETWEEN 0 and 1
+        double rng = Random().nextDouble();
         switch (dartsInHand) {
             case 2:
                 if ((scoreThisVisit == 60 && rng >= 0.8) || rng >= 0.5) {
@@ -46,18 +48,18 @@ class ThrowTarget {
     String toString() {
       /// FIXME: Change into a runtime exception
         if ((this.number > 20 && this.number != 25) || this.number < 0) {
-            throw new Exception("Illegal Number Located");
+            throw Exception("Illegal Number Located");
         }
         if (this.multiplier == 3) {
-            return "Treble " + this.number.toString();
+            return "Treble $this.number";
         } else if (this.multiplier == 2 && this.number != 25) {
-            return "Double " + this.number.toString();
+            return "Double $this.number";
         } else if (this.multiplier == 1) {
-            return "Single " + this.number.toString();
+            return "Single $this.number";
         } else if (this.multiplier == 2 && this.number == 25) {
             return "Bullseye";
         }
-        throw new Exception("Illegal Multiplier located");
+        throw Exception("Illegal Multiplier located");
     }
 
 

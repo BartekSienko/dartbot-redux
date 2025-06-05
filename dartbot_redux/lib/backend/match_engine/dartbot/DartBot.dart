@@ -12,7 +12,7 @@ class DartBot extends DartPlayer {
     int scoreThisVisit;
     List<DistributionTable> distroTables;
 
-  DartBot(super.name, super.rating) : 
+  DartBot(super.name, super.rating) : // Rating eq. 0 (30 3dA) - 100 (110 3dA)
     dartsInHand = 0,
     scoreThisVisit = 0,
     distroTables = [
@@ -210,7 +210,6 @@ class DartBot extends DartPlayer {
         }
 
         int rng = Random().nextInt(1000);
-
         return distroTable.getThrowResult(rng, target.number);
     }
 

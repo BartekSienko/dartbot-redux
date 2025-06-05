@@ -1,9 +1,10 @@
 // ignore_for_file: avoid_print
 
+
 import 'DartPlayer.dart';
 import 'MatchLogic.dart';
-import 'MatchEngine.dart';
-import 'dartbot/DartBot.dart';
+import 'matchEngine.dart';
+import 'dartbot/dartBot.dart';
 
 class MatchDriver {
   final MatchEngine match;
@@ -49,12 +50,11 @@ class MatchDriver {
 
 void main() {
     print("Input Player 1 name: ");
-    DartBot player1 = DartBot("Player 1", 50);
+    DartBot player1 = DartBot("Player 1", 100);
     print("Input Player 2 name: ");
-    DartBot player2 = DartBot("Player 2", 100);
+    DartBot player2 = DartBot("Player 2", 1);
     print(player2.distroTables.toString());
 
-    MatchDriver md = MatchDriver(player1, player2, MatchLogic(501, 100, false, 0, true, false));
-    
+    MatchDriver md = MatchDriver(player1, player2, MatchLogic(5001, 100, false, 0, true, false));
     md.runMatch(false);
   }
