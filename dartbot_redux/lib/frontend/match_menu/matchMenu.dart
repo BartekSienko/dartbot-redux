@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/numPad.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/statBox.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,8 @@ class _MainMenuState extends State<MainMenu> {
               Expanded(flex: 20, child: Scoreboard(player1: player1, player2: player2)),
               Expanded(flex: 1, child: Container()),
               Expanded(flex: 15, child: StatBox(player1: player1, player2: player2)),
-              Expanded(flex: 50, child: Container()),
+              Expanded(flex: 1, child: Container()),
+              Expanded(flex: 50, child: NumPad(player1: player1, player2: player2))
             ]
           ),
         ),

@@ -52,7 +52,7 @@ class _ScoreboardState extends State<Scoreboard> {
             2: FlexColumnWidth(1.95),
             3: FlexColumnWidth(2.1),
           },
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
             TableRow(children: [
               buildScoreText("First to 3 Legs", nameFontSize, topRowTextColor, topRowBGColor),
