@@ -35,91 +35,48 @@ class _MainMenuState extends State<MainMenu> {
   int playerOrder = 0;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: const Text('Dartbot Redux'),
-          centerTitle: true,
-        ),
-        
-        body: Column(
-            children: [
-              Expanded(flex: 20, child: Scoreboard(player1: player1, player2: player2)),
-              Expanded(flex: 1, child: Container()),
-              Expanded(flex: 15, child: StatBox(player1: player1, player2: player2)),
-              Expanded(flex: 1, child: Container()),
-              Expanded(flex: 50, child: NumPad(player1: player1, player2: player2))
-            ]
-          ),
-        ),
-      );
-  }
-
-
-Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
-  return Stack(
-    children: [
-      
-      Positioned.fill(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(color: backgroundColor.withAlpha(230)),
-            ),
-            Expanded(
-              child: Container(color: backgroundColor),
-            ),
-          ],
-        ),
+Widget build(BuildContext context) {
+  return MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text('Dartbot Redux'),
+        centerTitle: true,
       ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenHeight = constraints.maxHeight;
 
-      Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(16),  // Padding inside container, not outside
-        child: Text(
-            text,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          )
-    ],
-    
+          return Stack(
+            children: [
+              Positioned(
+                top: 0,
+                height: screenHeight * 0.20, // 20% of screen height
+                left: 0,
+                right: 0,
+                child: Scoreboard(player1: player1, player2: player2),
+              ),
+              Positioned(
+                top: screenHeight * 0.21,
+                height: screenHeight * 0.15,
+                left: 0,
+                right: 0,
+                child: StatBox(player1: player1, player2: player2),
+              ),
+              Positioned(
+                top: screenHeight * 0.4,
+                height: screenHeight * 0.6,
+                left: 0,
+                right: 0,
+                child: NumPad(player1: player1, player2: player2),
+              ),
+            ],
+          );
+        },
+      ),
+    ),
   );
 }
-
-  Widget buildStatText(String text, double fontSize, bool alignRight) {
-
-    return Padding(
-      padding: EdgeInsets.all(16), // Adjust padding as needed
-      child: Align( 
-        alignment: alignRight ? Alignment.centerRight : Alignment.centerLeft,
-        child: Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: fontSize
-                      ),
-                  )
-    )
-    );
-  }
-
-   // Helper method to center text with padding
-  Widget buildScoreText2(String text, double fontSize) {
-    return Padding(
-      padding: EdgeInsets.all(16), // Adjust padding as needed
-      child: Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: fontSize
-                      ),
-                  )
-    );
-  }
 
 }
