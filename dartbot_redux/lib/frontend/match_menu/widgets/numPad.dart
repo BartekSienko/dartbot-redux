@@ -64,7 +64,7 @@ class _NumPadState extends State<NumPad> {
             Container(
             color: bGColor,
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(10),  // Padding inside container, not outside
+            padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
             child: Text(
                 "${player1.name} turn to throw!",
                 style: TextStyle(
@@ -79,7 +79,7 @@ class _NumPadState extends State<NumPad> {
           Container(
             color: Colors.white,
             alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.all(10),  // Padding inside container, not outside
+            padding:  EdgeInsets.all((fontSize * 0.8)),  // Padding inside container, not outside
             child: Text(
                 "Total Score: $inputingScore",
                 style: TextStyle(
@@ -94,8 +94,11 @@ class _NumPadState extends State<NumPad> {
   }
 
   Widget buildNumPad(double fontSize, Color textColor, Color bGColor) {
+    
+
+    
     return Table(
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      defaultVerticalAlignment: TableCellVerticalAlignment.bottom,
       children: [
             TableRow(children: [
               buildNumber("1", fontSize, textColor, bGColor),
@@ -157,7 +160,7 @@ class _NumPadState extends State<NumPad> {
         ),
         Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.all(16), // inside padding
+          padding: EdgeInsets.all(fontSize * 0.87), // inside padding
           child: Text(
             number,
             style: TextStyle(

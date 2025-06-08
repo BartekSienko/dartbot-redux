@@ -36,8 +36,8 @@ class _ScoreboardState extends State<Scoreboard> {
   
   
   
-  double nameFontSize = screenWidth / 30;
-  double numberFontSize = screenWidth / 30;
+  double nameFontSize = screenWidth / 28;
+  double numberFontSize = screenWidth / 28;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
   Color nameTextColor = Colors.black;
@@ -95,7 +95,7 @@ class _ScoreboardState extends State<Scoreboard> {
 
       Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(16),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize),  // Padding inside container, not outside
         child: Text(
             text,
             style: TextStyle(

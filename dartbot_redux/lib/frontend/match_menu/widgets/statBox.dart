@@ -94,7 +94,7 @@ class _StatBoxState extends State<StatBox> {
 
       Container(
         alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
         child: Text(
             text,
             style: TextStyle(
@@ -139,7 +139,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
       child: Container(
         color: leftColor,
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.all(10),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
         child: Text(
             leftText,
             style: TextStyle(
@@ -155,7 +155,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
       child: Container(
         color: rightColor,
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.all(10),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
         child: Text(
             rightText,
             style: TextStyle(
@@ -169,44 +169,4 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
   );
 }
 
-
-Widget buildStatText2(String text, double fontSize, bool alignRight) {
-
-    return Padding(
-      padding: EdgeInsets.all(16), // Adjust padding as needed
-      child: Align( 
-        alignment: alignRight ? Alignment.centerRight : Alignment.centerLeft,
-        child: Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: fontSize
-                      ),
-                  )
-    )
-    );
-  }
-
-
 }
-
-/**
- * Expanded(
-          flex: 4,
-          child: Table(
-            border: TableBorder.all(color: Colors.black, width: 0.5), // Full border and cell borders
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(3),
-              
-            },
-            children: [ 
-              TableRow(children: [Center(child: buildScoreText("Stats", statFontSize, textColor, bGColor)), buildStatText2(player2.name, statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("180.0", statFontSize, textColor, bGColor)), buildStatText2("3 Dart Avr.", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("180", statFontSize, textColor, bGColor)), buildStatText2("Last Score", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("3", statFontSize, textColor, bGColor)), buildStatText2("Darts Thrown", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("1/1", statFontSize, textColor, bGColor)), buildStatText2("Checkout Rate", statFontSize, true)]),
-            ]
-            )
-        ),
- */
