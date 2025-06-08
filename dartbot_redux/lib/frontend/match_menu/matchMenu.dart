@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/statBox.dart';
@@ -88,56 +90,6 @@ Widget buildScoreText(String text, double fontSize, Color textColor, Color backg
     
   );
 }
-
-/**
-  Widget createLegStats(double screenWidth) {
-    double statFontSize = screenWidth / 60;
-    return Row(
-      children: [
-        Expanded(
-          flex: 4,
-          child: Table(
-            border: TableBorder.all(color: Colors.black, width: 0.5), // Full border and cell borders
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FlexColumnWidth(3),
-              1: FlexColumnWidth(2),
-              
-            },
-            children: [ 
-              TableRow(children: [buildStatText(playerName, statFontSize, false), Center(child: buildScoreText("Stats", statFontSize))]),
-              TableRow(children: [buildStatText("3 Dart Avr.", statFontSize, false), Center(child: buildScoreText(player3DA.toString(), statFontSize))]),
-              TableRow(children: [buildStatText("Last Score", statFontSize, false), Center(child: buildScoreText("0", statFontSize))]),
-              TableRow(children: [buildStatText("Darts Thrown", statFontSize, false), Center(child: buildScoreText(playerDartThrown.toString(), statFontSize))]),
-              TableRow(children: [buildStatText("Checkout Rate", statFontSize, false), Center(child: buildScoreText("8/21", statFontSize))]),
-            ]
-            )
-        ),
-        Expanded(flex: 2, child: Container()),
-        Expanded(
-          flex: 4,
-          child: Table(
-            border: TableBorder.all(color: Colors.black, width: 0.5), // Full border and cell borders
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            columnWidths: {
-              0: FlexColumnWidth(2),
-              1: FlexColumnWidth(3),
-              
-            },
-            children: [ 
-              TableRow(children: [Center(child: buildScoreText("Stats", statFontSize)), buildStatText("L. Littler", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("180.0", statFontSize)), buildStatText("3 Dart Avr.", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("180", statFontSize)), buildStatText("Last Score", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("3", statFontSize)), buildStatText("Darts Thrown", statFontSize, true)]),
-              TableRow(children: [Center(child: buildScoreText("1/1", statFontSize)), buildStatText("Checkout Rate", statFontSize, true)]),
-            ]
-            )
-        ),
-      ],
-    );
-    
-  }
-*/
 
   Widget buildStatText(String text, double fontSize, bool alignRight) {
 
