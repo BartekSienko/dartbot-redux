@@ -1,9 +1,11 @@
+// ignore_for_file: file_names, avoid_print
+
 // THIS FILE WILL BE REMOVED, ONLY USED DURING DIRECT TRANSLATION
 import 'dart:io';
 import 'match_engine/DartPlayer.dart';
-import 'match_engine/MatchDriver.dart';
+import 'match_engine/matchDriver.dart';
 import 'match_engine/MatchLogic.dart';
-import 'match_engine/dartbot/DartBot.dart';
+import 'match_engine/dartbot/dartBot.dart';
 //import 'tournament.dart';
 
 class StubTerminalMenu {
@@ -11,11 +13,11 @@ class StubTerminalMenu {
 
   void printMainMenu() {
     print("-----------------");
-    String str = "1) Play a match\n" +
-                 "2) New Tournament\n" +
-                 "3) Load Tournament\n" +
-                 "4) New Career Mode\n" +
-                 "5) Load Career Mode\n" +
+    String str = "1) Play a match\n" 
+                 "2) New Tournament\n"
+                 "3) Load Tournament\n"
+                 "4) New Career Mode\n"
+                 "5) Load Career Mode\n"
                  "0) Quit\n";
     print(str);
   }
@@ -45,9 +47,9 @@ class StubTerminalMenu {
   }
 
   void setupMatch() {
-    String str = "1) Player vs Player\n" +
-                 "2) Player vs Bot\n" +
-                 "3) Bot vs Player\n" +
+    String str = "1) Player vs Player\n"
+                 "2) Player vs Bot\n"
+                 "3) Bot vs Player\n"
                  "4) Bot vs Bot\n";
     print(str);
     input = getIntInRange(1, 4);

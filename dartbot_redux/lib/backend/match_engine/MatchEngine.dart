@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_this
+// ignore_for_file: unnecessary_this, file_names, avoid_print
 
 
 import 'DartPlayer.dart';
@@ -65,19 +65,19 @@ class MatchEngine {
         DartPlayer? hasWonLeg = this.ifWonLeg();
         if (hasWonLeg != null) {
             if (hasWonLeg.equals(this.player1)) {
-                if (!ifQuickSim) print(this.player1.name + " has won the leg!");
+                if (!ifQuickSim) print("${this.player1.name} has won the leg!");
                 this.player1.updateBestWorstLegs();
             } else {
-                if (!ifQuickSim) print(this.player2.name + " has won the leg!");
+                if (!ifQuickSim) print("${this.player2.name} has won the leg!");
                 this.player2.updateBestWorstLegs();
             }
             
             DartPlayer? hasWonSet = this.ifWonSet();
             if (hasWonSet != null) {
                 if (hasWonSet.equals(this.player1)) {
-                    if (!ifQuickSim) print(this.player1.name + " has won the set!");
+                    if (!ifQuickSim) print("${this.player1.name} has won the set!");
                 } else {
-                    if (!ifQuickSim) print(this.player2.name + " has won the set!");
+                    if (!ifQuickSim) print("${this.player2.name} has won the set!");
                 }
             }
         } 
@@ -140,15 +140,13 @@ class MatchEngine {
 
     @override
     String toString() {
-        return "Current Result:\nLeg|Scr\n(" + player1.legs.toString() + ") (" + player1.score.toString() + ") " + player1.name +
-               "\n(" + player2.legs.toString() + ") (" + player2.score.toString() + ") " + player2.name;
+        return "Current Result:\nLeg|Scr\n(${player1.legs}) (${player1.score}) ${player1.name}\n(${player2.legs}) (${player2.score}) ${player2.name}";
 
         
     }
 
      String toStringSetPlay() {
-        return "Current Result:\nSet|Leg|Scr\n("  + player1.sets.toString() + ") (" + player1.legs.toString() + ") (" + player1.score.toString() + ") " + player1.name +
-               "\n(" + player2.sets.toString() + ") (" + player2.legs.toString() + ") (" + player2.score.toString() + ") " + player2.name;
+        return "Current Result:\nSet|Leg|Scr\n(${player1.sets}) (${player1.legs}) (${player1.score}) ${player1.name}\n(${player2.sets}) (${player2.legs}) (${player2.score}) ${player2.name}";
     }
 
     @override

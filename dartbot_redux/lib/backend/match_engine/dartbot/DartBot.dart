@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_this
+// ignore_for_file: unnecessary_this, file_names, avoid_print
 
 
 import 'dart:math';
@@ -102,7 +102,7 @@ class DartBot extends DartPlayer {
             // Aims at a Single to leave 'Double 20/18' finish
             return ThrowTarget(1, (remainingScore - aimedDouble));
         } else if (41 <= remainingScore && remainingScore <= 52) {
-            double doubleRNG = Random().nextDouble();;
+            double doubleRNG = Random().nextDouble();
             int aimedDouble;
             // Decides on Double 20, 18 or 16
             if (doubleRNG >= 0.33) { 
@@ -161,7 +161,7 @@ class DartBot extends DartPlayer {
             return ThrowTarget(1, 1);
         }
         // If somehow a ThrowTarget wasn't found, throw a RuntineException
-        throw Exception("Didn't create target for score: " + this.score.toString() + " with " + this.dartsInHand.toString() + " darts left");
+        throw Exception("Didn't create target for score: $this.score with $this.dartsInHand darts left");
     }
 
     @override
@@ -215,12 +215,12 @@ class DartBot extends DartPlayer {
 
     @override
     String toString() {
-        return "(" + this.legs.toString() + ")  " + this.score.toString() + "  " + this.name + " (Bot)";
+        return "($this.legs) $this.score $this.name (Bot)";
     }
 
     @override
     String toStringSetPlay() {
-        return "(" + this.sets.toString() + ") " + "(" + this.legs.toString() + ")  " + this.score.toString() + "  " + this.name + " (Bot)";
+        return "($this.sets) ($this.legs) $this.score $this.name (Bot)";
     }
 
 

@@ -35,8 +35,8 @@ class _MainMenuState extends State<MainMenu> {
         body: Column(
             children: [
               Expanded(flex: 20, child: createScoreboard(screenWidth)),
-              Expanded(flex: 5, child: Container()),
-              Expanded(flex: 20, child: createLegStats(screenWidth)),
+              Expanded(flex: 2, child: Container()),
+              Expanded(flex: 10, child: createLegStats(screenWidth)),
               Expanded(flex: 50, child: Container()),
             ]
           ),
