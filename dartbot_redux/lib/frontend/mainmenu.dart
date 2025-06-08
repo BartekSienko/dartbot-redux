@@ -1,5 +1,6 @@
 import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/statBox.dart';
 import 'package:flutter/material.dart';
 
 
@@ -21,7 +22,7 @@ class _MainMenuState extends State<MainMenu> {
     super.initState();
     player1.score = 501;
     player2.score = 321;
-    
+    player2.legs = 1;
     player2.dartThrow(180, true, 0);
   }
   
@@ -44,8 +45,8 @@ class _MainMenuState extends State<MainMenu> {
         body: Column(
             children: [
               Expanded(flex: 20, child: Scoreboard(player1: player1, player2: player2)),
-              Expanded(flex: 2, child: Container()),
-              //Expanded(flex: 10, child: createLegStats(screenWidth)),
+              Expanded(flex: 1, child: Container()),
+              Expanded(flex: 15, child: StatBox(player1: player1, player2: player2)),
               Expanded(flex: 50, child: Container()),
             ]
           ),
