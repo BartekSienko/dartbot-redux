@@ -1,3 +1,5 @@
+import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:flutter/material.dart';
 
 
@@ -10,11 +12,19 @@ class MainMenu extends StatefulWidget{
 
 class _MainMenuState extends State<MainMenu> {
 
-  String playerName = "L. Humphries";
-  String natCode = " (ENG)";
-  double player3DA = 123.9;
-  int playerScore = 501;
-  int playerDartThrown = 0;
+
+  DartPlayer player1 = DartPlayer("L. Humphries", 10.0);
+  DartPlayer player2 = DartPlayer("L. Littler (ENG) (32)", 10.0);
+
+  @override
+  void initState(){
+    super.initState();
+    player1.score = 501;
+    player2.score = 321;
+    
+    player2.dartThrow(180, true, 0);
+  }
+  
 
 
 
@@ -22,7 +32,6 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -34,9 +43,9 @@ class _MainMenuState extends State<MainMenu> {
         
         body: Column(
             children: [
-              Expanded(flex: 20, child: createScoreboard(screenWidth)),
+              Expanded(flex: 20, child: Scoreboard(player1: player1, player2: player2)),
               Expanded(flex: 2, child: Container()),
-              Expanded(flex: 10, child: createLegStats(screenWidth)),
+              //Expanded(flex: 10, child: createLegStats(screenWidth)),
               Expanded(flex: 50, child: Container()),
             ]
           ),
@@ -45,56 +54,41 @@ class _MainMenuState extends State<MainMenu> {
   }
 
 
-  Widget createScoreboard(double screenWidth) {
-    double nameFontSize = screenWidth / 30;
-    double numberFontSize = screenWidth / 30;
-    return Row(
-      children: [
-        Expanded(flex: 95,
-          child: Table(
-            border: TableBorder.all(color: Colors.black, width: 0.5), // Full border and cell borders
-
-            columnWidths: {
-              0: FlexColumnWidth(6),
-              1: FlexColumnWidth(1.8),
-              2: FlexColumnWidth(1.8),
-              3: FlexColumnWidth(2.4)
-            },
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: [
-               TableRow(children: [
-                buildScoreText("First to 3 Legs", nameFontSize),
-                Center(child: buildScoreText("Sets", nameFontSize * 0.75)),
-                Center(child: buildScoreText("Legs", nameFontSize * 0.70)),
-                Center(child: buildScoreText("Score", nameFontSize)),
-              ]),
-                TableRow(children: [
-                  buildScoreText(playerName + natCode, nameFontSize),
-                  Center(child: buildScoreText("0", numberFontSize)),
-                  Center(child: buildScoreText("2", numberFontSize )),
-                  Center(child: buildScoreText("501", numberFontSize)),
-              ]),
-              TableRow(children: [
-                buildScoreText("L. Littler (ENG) (32)", nameFontSize),
-                Center(child: buildScoreText("0", numberFontSize)),
-                Center(child: buildScoreText("1", numberFontSize)),
-                Center(child: buildScoreText("321", numberFontSize)),
-              ]),
-            ],
-          )
+Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
+  return Stack(
+    children: [
+      
+      Positioned.fill(
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(color: backgroundColor.withAlpha(230)),
+            ),
+            Expanded(
+              child: Container(color: backgroundColor),
+            ),
+          ],
         ),
-        Expanded(
-          flex: 5, 
-          child: FractionalTranslation(translation: Offset(0, 5/3 * playerOrder), 
-            child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(" <", style: TextStyle(fontSize: numberFontSize * 1.5),))))
-      ]
-    );
+      ),
+
+      Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(16),  // Padding inside container, not outside
+        child: Text(
+            text,
+            style: TextStyle(
+              fontSize: fontSize,
+              color: textColor,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          )
+    ],
     
-  }
+  );
+}
 
-
+/**
   Widget createLegStats(double screenWidth) {
     double statFontSize = screenWidth / 60;
     return Row(
@@ -142,7 +136,7 @@ class _MainMenuState extends State<MainMenu> {
     );
     
   }
-
+*/
 
   Widget buildStatText(String text, double fontSize, bool alignRight) {
 
@@ -161,7 +155,7 @@ class _MainMenuState extends State<MainMenu> {
   }
 
    // Helper method to center text with padding
-  Widget buildScoreText(String text, double fontSize) {
+  Widget buildScoreText2(String text, double fontSize) {
     return Padding(
       padding: EdgeInsets.all(16), // Adjust padding as needed
       child: Text(
