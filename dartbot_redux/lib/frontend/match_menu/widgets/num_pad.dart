@@ -69,6 +69,13 @@ class _NumPadState extends State<NumPad> {
 
 
   Widget buildTextField(double fontSize, Color textColor, Color bGColor) {
+      String playerName;
+      if (matchEngine.throwing == 1) {
+        playerName = matchEngine.player1.name;
+      } else {
+        playerName = matchEngine.player2.name;
+      }
+      
       return Column(
         children: [
           //Green textbox
@@ -77,7 +84,7 @@ class _NumPadState extends State<NumPad> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
             child: Text(
-                "${matchEngine.player1.name} turn to throw!",
+                "$playerName turn to throw!",
                 style: TextStyle(
                   fontSize: fontSize,
                   color: textColor,

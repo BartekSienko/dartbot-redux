@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/num_pad.dart';
@@ -18,7 +19,7 @@ class MainMenu extends StatefulWidget{
 
 class _MainMenuState extends State<MainMenu> {
   MatchEngine matchEngine = MatchEngine(DartPlayer("L. Humphries", 10.0), 
-                                        DartPlayer("L. Littler (ENG) (32)", 10.0),
+                                        DartBot("L. Littler (ENG) (32)", 100.0),
                                         MatchLogic(501, 3, false, 0, true, false));
 
   @override

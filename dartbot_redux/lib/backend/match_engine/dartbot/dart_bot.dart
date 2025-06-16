@@ -166,7 +166,7 @@ class DartBot extends DartPlayer {
     }
 
     @override
-    void visitThrow(bool isDoubleOut, bool isDoubleIn) {
+    bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
         this.dartsInHand = 3;
         int scoreBeforeVisit = this.score;
         this.scoreThisVisit = 0;
@@ -176,17 +176,21 @@ class DartBot extends DartPlayer {
             this.score -= currentThrow;
             this.dartsInHand--;
             if (this.score == 1 || this.score < 0 || (this.score == 0 
-                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn))) {
+                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn, ""))) {
                 this.score = scoreBeforeVisit;
                 this.dartThrow(0, isDoubleOut, 3);
                 print("Bust score!"); // Removed for QuickSims
-                return;
+                return false;
             } else if ((this.score) == 0) {
                 break;
             }
         }
 
         this.dartThrow(this.scoreThisVisit, isDoubleOut, 3 - dartsInHand);
+
+        // Hands the "turn" to the next player
+        return true;
+
 
     }
 

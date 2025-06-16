@@ -26,7 +26,6 @@ class DartPlayer {
     }
   }
 
-  /// TODO: Rewrite function when connecting to frontend (Visits)
   bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
     bool legalScore = true;
       legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut, errorString);

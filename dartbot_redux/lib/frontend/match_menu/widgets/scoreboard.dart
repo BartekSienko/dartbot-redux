@@ -43,13 +43,10 @@ void initState() {
   
   @override
   Widget build(BuildContext context) {
-  if (matchEngine == null) {
-    return const Center(child: CircularProgressIndicator()); // or fallback widget
-  }
   double screenWidth = MediaQuery.of(context).size.width;
   
-  DartPlayer player1 = matchEngine!.player1;
-  DartPlayer player2 = matchEngine!.player2;
+  DartPlayer player1 = matchEngine.player1;
+  DartPlayer player2 = matchEngine.player2;
   
   
   
