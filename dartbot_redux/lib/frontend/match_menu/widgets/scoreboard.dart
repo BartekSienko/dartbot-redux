@@ -20,19 +20,36 @@ class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
 
 
-
   @override
-  void initState() {
-    super.initState();
-    matchEngine = widget.matchEngine;
+void initState() {
+  super.initState();
+  matchEngine = widget.matchEngine;
+
+  // Add listener to rebuild the widget when MatchEngine notifies
+    matchEngine.addListener(_onMatchEngineUpdate);  
+}
+
+    @override
+  void dispose() {
+    matchEngine.removeListener(_onMatchEngineUpdate);
+    super.dispose();
+  }
+
+  void _onMatchEngineUpdate() {
+    setState(() {
+      // Rebuild the widget whenever MatchEngine notifies
+    });
   }
   
   @override
   Widget build(BuildContext context) {
+  if (matchEngine == null) {
+    return const Center(child: CircularProgressIndicator()); // or fallback widget
+  }
   double screenWidth = MediaQuery.of(context).size.width;
   
-  DartPlayer player1 = matchEngine.player1;
-  DartPlayer player2 = matchEngine.player2;
+  DartPlayer player1 = matchEngine!.player1;
+  DartPlayer player2 = matchEngine!.player2;
   
   
   
@@ -65,13 +82,13 @@ class _ScoreboardState extends State<Scoreboard> {
               buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.score.toString(), numberFontSize, numberTextColor, numberBGColor),
-            ]),
+          ]),
             TableRow(children: [
               buildScoreText(player2.name, nameFontSize, nameTextColor, nameBGColor),
               buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.score.toString(), numberFontSize, numberTextColor, numberBGColor),
-            ]),
+          ]),
           ],
         );
   }

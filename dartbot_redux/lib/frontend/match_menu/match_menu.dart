@@ -24,12 +24,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
   void initState(){
     super.initState();
-    DartPlayer player1 = matchEngine.player1;
-    DartPlayer player2 = matchEngine.player2;
-    player1.score = 501;
-    player2.score = 321;
-    player2.legs = 1;
-    player2.dartThrow(180, true, 0);
+    matchEngine.initMatch();
   }
   
 
@@ -62,7 +57,7 @@ Widget build(BuildContext context) {
                 child: Scoreboard(matchEngine: matchEngine),
               ),
               Positioned(
-                top: screenHeight * 0.21,
+                top: screenHeight * 0.225,
                 height: screenHeight * 0.15,
                 left: 0,
                 right: 0,

@@ -27,6 +27,21 @@ class _StatBoxState extends State<StatBox> {
   void initState() {
     super.initState();
     matchEngine = widget.matchEngine;
+
+    matchEngine.addListener(_onMatchEngineUpdate);  
+
+  }
+
+      @override
+  void dispose() {
+    matchEngine.removeListener(_onMatchEngineUpdate);
+    super.dispose();
+  }
+
+  void _onMatchEngineUpdate() {
+    setState(() {
+      // Rebuild the widget whenever MatchEngine notifies
+    });
   }
   
   @override
@@ -62,10 +77,17 @@ class _StatBoxState extends State<StatBox> {
 
     PlayerMatchStats playerStats = player.stats;
 
-    List<String> stats = ["0.0",
-                          "0",
-                          playerStats.dartsThrownLeg.toString(),
-                          playerStats.getCheckoutSplit()];
+    String average = playerStats.getListAverage(playerStats.scores).toString();
+    String last;
+    if (playerStats.scores.isEmpty) {
+      last = "0";
+    } else {
+      last = playerStats.scores.last.toString();
+    }
+    String dartsThrown = playerStats.dartsThrownLeg.toString();
+    String checkouts = playerStats.getCheckoutSplit();
+
+    List<String> stats = [average, last, dartsThrown, checkouts];
 
     return Column(
       children: [
