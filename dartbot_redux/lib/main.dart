@@ -1,4 +1,4 @@
-import 'package:dartbot_redux/frontend/match_menu/matchMenu.dart';
+import 'package:dartbot_redux/frontend/match_menu/match_menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {

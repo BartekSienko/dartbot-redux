@@ -1,18 +1,16 @@
 // ignore_for_file: file_names
 
 
-import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:flutter/material.dart';
 
 class NumPad extends StatefulWidget{
-  final DartPlayer player1;
-  final DartPlayer player2;
+  final MatchEngine matchEngine;
 
   
   const NumPad({
     super.key,
-    required this.player1,
-    required this.player2,
+    required this.matchEngine
   });
 
   @override
@@ -21,16 +19,14 @@ class NumPad extends StatefulWidget{
 }
 
 class _NumPadState extends State<NumPad> {
-  late DartPlayer player1;
-  late DartPlayer player2;
+  late MatchEngine matchEngine;
   String inputingScore = "";
 
 
   @override
   void initState() {
     super.initState();
-    player1 = widget.player1;
-    player2 = widget.player2;
+    matchEngine = widget.matchEngine;
   }
   
   @override
@@ -66,7 +62,7 @@ class _NumPadState extends State<NumPad> {
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
             child: Text(
-                "${player1.name} turn to throw!",
+                "${matchEngine.player1.name} turn to throw!",
                 style: TextStyle(
                   fontSize: fontSize,
                   color: textColor,

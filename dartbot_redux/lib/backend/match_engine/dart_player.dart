@@ -3,7 +3,7 @@
 import 'dart:collection';
 import 'dart:io';
 
-import 'package:dartbot_redux/backend/match_engine/PlayerMatchStats.dart';
+import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 
 class DartPlayer {
   String name;

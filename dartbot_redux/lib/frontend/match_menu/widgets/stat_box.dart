@@ -1,17 +1,16 @@
 // ignore_for_file: file_names
-import 'package:dartbot_redux/backend/match_engine/PlayerMatchStats.dart';
-import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:flutter/material.dart';
 
 
 class StatBox extends StatefulWidget{
-  final DartPlayer player1;
-  final DartPlayer player2;
+  final MatchEngine matchEngine;
   
   const StatBox({
     super.key,
-    required this.player1,
-    required this.player2,
+    required this.matchEngine
   });
 
   @override
@@ -20,20 +19,20 @@ class StatBox extends StatefulWidget{
 }
 
 class _StatBoxState extends State<StatBox> {
-  late DartPlayer player1;
-  late DartPlayer player2;
+  late MatchEngine matchEngine;
+
 
 
   @override
   void initState() {
     super.initState();
-    player1 = widget.player1;
-    player2 = widget.player2;
+    matchEngine = widget.matchEngine;
   }
   
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
 
     return Row(
       children: [
@@ -50,6 +49,9 @@ class _StatBoxState extends State<StatBox> {
     Color textColor = Colors.white;
     Color bGColor = Colors.black;
     Color themeColor = Colors.green;
+
+    DartPlayer player1 = matchEngine.player1;
+    DartPlayer player2 = matchEngine.player2;
 
     DartPlayer player;
     if (isLeft) {

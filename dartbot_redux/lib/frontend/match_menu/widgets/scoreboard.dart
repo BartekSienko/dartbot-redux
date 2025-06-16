@@ -1,15 +1,14 @@
-import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:flutter/material.dart';
 
 
 class Scoreboard extends StatefulWidget{
-  final DartPlayer player1;
-  final DartPlayer player2;
+  final MatchEngine matchEngine;
   
   const Scoreboard({
     super.key,
-    required this.player1,
-    required this.player2,
+    required this.matchEngine
   });
 
   @override
@@ -18,21 +17,22 @@ class Scoreboard extends StatefulWidget{
 }
 
 class _ScoreboardState extends State<Scoreboard> {
-  late DartPlayer player1;
-  late DartPlayer player2;
+  late MatchEngine matchEngine;
+
 
 
   @override
   void initState() {
     super.initState();
-    player1 = widget.player1;
-    player2 = widget.player2;
+    matchEngine = widget.matchEngine;
   }
   
   @override
   Widget build(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
-
+  
+  DartPlayer player1 = matchEngine.player1;
+  DartPlayer player2 = matchEngine.player2;
   
   
   

@@ -1,9 +1,11 @@
 // ignore_for_file: file_names
 
-import 'package:dartbot_redux/backend/match_engine/dartPlayer.dart';
-import 'package:dartbot_redux/frontend/match_menu/widgets/numPad.dart';
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/num_pad.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
-import 'package:dartbot_redux/frontend/match_menu/widgets/statBox.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/stat_box.dart';
 import 'package:flutter/material.dart';
 
 
@@ -15,14 +17,15 @@ class MainMenu extends StatefulWidget{
 }
 
 class _MainMenuState extends State<MainMenu> {
-
-
-  DartPlayer player1 = DartPlayer("L. Humphries", 10.0);
-  DartPlayer player2 = DartPlayer("L. Littler (ENG) (32)", 10.0);
+  MatchEngine matchEngine = MatchEngine(DartPlayer("L. Humphries", 10.0), 
+                                        DartPlayer("L. Littler (ENG) (32)", 10.0),
+                                        MatchLogic(501, 3, false, 0, true, false));
 
   @override
   void initState(){
     super.initState();
+    DartPlayer player1 = matchEngine.player1;
+    DartPlayer player2 = matchEngine.player2;
     player1.score = 501;
     player2.score = 321;
     player2.legs = 1;
@@ -36,6 +39,7 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
 Widget build(BuildContext context) {
+
   return MaterialApp(
     debugShowCheckedModeBanner: false,
     home: Scaffold(
@@ -55,21 +59,21 @@ Widget build(BuildContext context) {
                 height: screenHeight * 0.20, // 20% of screen height
                 left: 0,
                 right: 0,
-                child: Scoreboard(player1: player1, player2: player2),
+                child: Scoreboard(matchEngine: matchEngine),
               ),
               Positioned(
                 top: screenHeight * 0.21,
                 height: screenHeight * 0.15,
                 left: 0,
                 right: 0,
-                child: StatBox(player1: player1, player2: player2),
+                child: StatBox(matchEngine: matchEngine),
               ),
               Positioned(
                 top: screenHeight * 0.4,
                 height: screenHeight * 0.6,
                 left: 0,
                 right: 0,
-                child: NumPad(player1: player1, player2: player2),
+                child: NumPad(matchEngine: matchEngine),
               ),
             ],
           );
