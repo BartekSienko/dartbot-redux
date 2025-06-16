@@ -2,10 +2,10 @@
 
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 
 
-import 'match_engine.dart';
 import 'dartbot/dart_bot.dart';
 
 class MatchDriver {

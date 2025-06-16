@@ -27,6 +27,21 @@ class _NumPadState extends State<NumPad> {
   void initState() {
     super.initState();
     matchEngine = widget.matchEngine;
+
+    matchEngine.addListener(_onMatchEngineUpdate);  
+
+  }
+
+      @override
+  void dispose() {
+    matchEngine.removeListener(_onMatchEngineUpdate);
+    super.dispose();
+  }
+
+  void _onMatchEngineUpdate() {
+    setState(() {
+      // Rebuild the widget whenever MatchEngine notifies
+    });
   }
   
   @override
@@ -177,7 +192,8 @@ void handleButtonPress(String number) {
     inputingScore += number; // update the state variable
     });
   } else if (number == ">") {
-    //Send as a dart throw
+    matchEngine.visitThrow(int.tryParse(inputingScore)!);
+    inputingScore = "";
   } else if (number == "C") {
     setState(() {
     inputingScore = ""; // update the state variable
