@@ -2,10 +2,12 @@
 
 // THIS FILE WILL BE REMOVED, ONLY USED DURING DIRECT TRANSLATION
 import 'dart:io';
-import 'match_engine/DartPlayer.dart';
-import 'match_engine/matchDriver.dart';
-import 'match_engine/MatchLogic.dart';
-import 'match_engine/dartbot/dartBot.dart';
+
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
+import 'package:dartbot_redux/backend/match_engine/match_driver.dart';
+import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+
 //import 'tournament.dart';
 
 class StubTerminalMenu {

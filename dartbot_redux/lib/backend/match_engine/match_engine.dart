@@ -1,9 +1,11 @@
 // ignore_for_file: unnecessary_this, file_names, avoid_print
 
 
-import 'DartPlayer.dart';
-import 'MatchLogic.dart';
 
+
+
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 
 class MatchEngine {
   DartPlayer player1;

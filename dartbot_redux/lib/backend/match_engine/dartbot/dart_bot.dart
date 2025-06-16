@@ -3,9 +3,10 @@
 
 import 'dart:math';
 
-import 'package:dartbot_redux/backend/match_engine/DartPlayer.dart';
-import 'package:dartbot_redux/backend/match_engine/dartbot/DistributionTable.dart';
-import 'package:dartbot_redux/backend/match_engine/dartbot/ThrowTarget.dart';
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/distribution_table.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/throw_target.dart';
+
 
 class DartBot extends DartPlayer {
     int dartsInHand;
