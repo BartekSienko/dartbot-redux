@@ -1,30 +1,29 @@
 // ignore_for_file: file_names
 
-import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
-import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
-import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/num_pad.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/stat_box.dart';
 import 'package:flutter/material.dart';
 
 
-class MainMenu extends StatefulWidget{
-  const MainMenu({super.key});
+class MatchMenu extends StatefulWidget{
+  final MatchEngine matchEngine;
+
+  const MatchMenu({super.key, required this.matchEngine});
 
   @override
-  State<MainMenu> createState() => _MainMenuState();
+  State<MatchMenu> createState() => _MatchMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> {
-  MatchEngine matchEngine = MatchEngine(DartPlayer("L. Humphries", 10.0), 
-                                        DartBot("L. Littler (ENG) (32)", 100.0),
-                                        MatchLogic(501, 3, false, 0, true, false));
+class _MatchMenuState extends State<MatchMenu> {
+  late MatchEngine matchEngine;
+
 
   @override
   void initState(){
     super.initState();
+    matchEngine = widget.matchEngine;
     matchEngine.initMatch();
   }
   
@@ -36,9 +35,7 @@ class _MainMenuState extends State<MainMenu> {
   @override
 Widget build(BuildContext context) {
 
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
+  return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text('Dartbot Redux'),
@@ -75,8 +72,8 @@ Widget build(BuildContext context) {
           );
         },
       ),
-    ),
   );
+    
 }
 
 }
