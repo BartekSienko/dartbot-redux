@@ -23,7 +23,7 @@ class DistributionTable {
         generatedTable = generateDoubleDT(doubleChange);
         break;
       case "Singles":
-        double singleChange = ((-0.06 * (rating * rating) + (12.4 * rating) + 360) / 1000);
+        double singleChange = ((-0.07 * (rating * rating) + (14.8 * rating) + 220) / 1000);
         generatedTable = generateSingleDT(singleChange);
         break;
       case "Bullseye":
