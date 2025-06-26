@@ -1,11 +1,12 @@
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
-import 'package:flutter/foundation.dart';  // for ChangeNotifier
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 import 'package:flutter/material.dart';
 
 class MatchEngine extends ChangeNotifier{
+  BuildContext context;
   DartPlayer player1;
   DartPlayer player2;
   final MatchLogic matchRules;
@@ -14,13 +15,20 @@ class MatchEngine extends ChangeNotifier{
   int onThrowSet = 1;
 
 
-  MatchEngine(this.player1, this.player2, this.matchRules);
+  MatchEngine(this.player1, this.player2, this.matchRules, this.context);
 
   void initMatch() {
     newLeg();
     onThrow = 1;
     onThrowSet = 1;
     throwing = 1;
+    if (player1 is DartBot) {
+      DartBot p1 = player1 as DartBot;
+      p1.visitThrow(0, matchRules.doubleOut, 
+                            matchRules.doubleIn, "");
+      notifyListeners();
+      throwing = 2;
+    }
   }
 
   void newLeg() {
@@ -126,11 +134,13 @@ class MatchEngine extends ChangeNotifier{
     if (player1.score <= 0) {
       player1.legs++;
       player2.score = 0;
+      checkForNewBestWorst(player1);
       checkForMatchWinner(player1);
       newLeg();
     } else if (player2.score <= 0) {
       player2.legs++;
       player1.score = 0;
+      checkForNewBestWorst(player2);
       checkForMatchWinner(player2);
       newLeg();
     }
@@ -139,6 +149,18 @@ class MatchEngine extends ChangeNotifier{
       checkForFinishedSet();
     }
 
+  }
+
+  void checkForNewBestWorst(DartPlayer player) {
+    int dartsThrown = player.stats.dartsThrownLeg;
+    if (player.stats.bestLeg == 0) {
+      player.stats.bestLeg = dartsThrown;
+      player.stats.worstLeg = dartsThrown;
+    } else if (player.stats.bestLeg > dartsThrown) {
+      player.stats.bestLeg = dartsThrown;
+    } else if (player.stats.worstLeg < dartsThrown) {
+      player.stats.worstLeg = dartsThrown;
+    }
   }
 
   void checkForFinishedSet() {
@@ -160,13 +182,66 @@ class MatchEngine extends ChangeNotifier{
   void checkForMatchWinner(DartPlayer player) {
     if (matchRules.isSetPlay) {
       if (player.sets >= matchRules.setLimit) {
-        /// MATCH IS OVER!!!
+        showMatchStats(context);
       }
     } else {
       if (player.legs >= matchRules.legLimit) {
-       /// MATCH IS OVER!!
+       showMatchStats(context);
       }
     }
   }
+
+  Widget generateMatchStats() {
+    PlayerMatchStats p1Stats = player1.stats;
+    PlayerMatchStats p2Stats = player2.stats;
+    return Table(
+      children: [
+        generateStatRow(player1.name, "Stats", player2.name),
+        generateStatRow(p1Stats.getListAverage(p1Stats.scores).toString(), "3DA", p2Stats.getListAverage(p2Stats.scores).toString()),
+        generateStatRow(p1Stats.getListAverage(p1Stats.first9scores).toString(), "First 9", p2Stats.getListAverage(p2Stats.first9scores).toString()),
+        generateStatRow(p1Stats.getCheckoutSplit(), "Checkouts", p2Stats.getCheckoutSplit()),
+        generateStatRow(p1Stats.getHighestFromList(p1Stats.scores).toString(), "High Score", p2Stats.getHighestFromList(p2Stats.scores).toString()),
+        generateStatRow(p1Stats.getHighestFromList(p1Stats.checkouts).toString(), "High. Out", p2Stats.getHighestFromList(p2Stats.checkouts).toString()),
+        generateStatRow(p1Stats.bestLeg.toString(), "Best Leg", p2Stats.bestLeg.toString()),
+        generateStatRow(p1Stats.worstLeg.toString(), "Worst Leg", p2Stats.worstLeg.toString()),
+      
+        ]);
+  }
+
+  TableRow generateStatRow(String text1, String text2, String text3) {
+    return TableRow(children: [
+          Align(alignment: Alignment.centerRight, child: Text(text1, style: TextStyle(fontSize: 12),)),
+          Align(alignment: Alignment.center,      child: Text(text2, style: TextStyle(fontSize: 12))),
+          Align(alignment: Alignment.centerLeft,  child: Text(text3, style: TextStyle(fontSize: 12))),
+
+    ]
+    );
+
+  }
+
+
+  void showMatchStats(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Center(child: Text('Match Stats')),
+        content: generateMatchStats(),
+        actions: [
+          TextButton(
+            child: Text('Close'),
+            
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // close the dialog
+              Navigator.of(context).pop();       // pop the page
+            },
+          ),
+        ],
+      );
+    },
+  );
+
+  
+}
 
 }
