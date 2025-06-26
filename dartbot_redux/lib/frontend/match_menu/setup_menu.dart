@@ -45,7 +45,7 @@ class _SetupMenuState extends State<SetupMenu> {
         body: Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(240, 76, 175, 80),
+              color: Colors.white,
               border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             child: Column(
@@ -80,7 +80,7 @@ class _SetupMenuState extends State<SetupMenu> {
                       });
                     },
                   ),
-                
+            SizedBox(height: 24),
               Row(
                 children: [
                   buildTextWithTextField('Start Score (501/301)', startScoreController),
@@ -149,7 +149,7 @@ class _SetupMenuState extends State<SetupMenu> {
               child: ElevatedButton(
                 onPressed: () => onSelected1(label1),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selected1 == label1 ? Colors.white : Colors.grey,
+                  backgroundColor: selected1 == label1 ? Colors.green : Colors.white,
                 ),
                 child: Text(label1, style: TextStyle(fontSize: 11),),
               ),
@@ -159,7 +159,7 @@ class _SetupMenuState extends State<SetupMenu> {
               child: ElevatedButton(
                 onPressed: () => onSelected1(label2),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selected1 == label2 ? Colors.white : Colors.grey,
+                  backgroundColor: selected1 == label2 ? Colors.green : Colors.white,
                 ),
                 child: Text(label2),
               ),
@@ -178,7 +178,7 @@ class _SetupMenuState extends State<SetupMenu> {
               child: ElevatedButton(
                 onPressed: () => onSelected2(label1),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selected2 == label1 ? Colors.white : Colors.grey,
+                  backgroundColor: selected2 == label1 ? Colors.green : Colors.white,
                 ),
                 child: Text(label1, style: TextStyle(fontSize: 11)),
               ),
@@ -188,7 +188,7 @@ class _SetupMenuState extends State<SetupMenu> {
               child: ElevatedButton(
                 onPressed: () => onSelected2(label2),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: selected2 == label2 ? Colors.white : Colors.grey,
+                  backgroundColor: selected2 == label2 ? Colors.green : Colors.white,
                 ),
                 child: Text(label2),
               ),
@@ -218,7 +218,7 @@ class _SetupMenuState extends State<SetupMenu> {
                int.parse(legCountController.text), 
                false, 0, false, false);
 
-    return MatchEngine(player1, player2, rules);
+    return MatchEngine(player1, player2, rules, context);
 
   }
 }

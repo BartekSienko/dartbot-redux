@@ -69,7 +69,7 @@ void initState() {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
             TableRow(children: [
-              buildScoreText("First to 3 Legs", nameFontSize, topRowTextColor, topRowBGColor),
+              buildScoreText("First to ${matchEngine.matchRules.legLimit} Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Score", nameFontSize, topRowTextColor, topRowBGColor),
