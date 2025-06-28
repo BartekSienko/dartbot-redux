@@ -36,6 +36,7 @@ class _MatchMenuState extends State<MatchMenu> {
 Widget build(BuildContext context) {
 
   return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 50, 96, 51),
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text('Dartbot Redux'),
@@ -49,24 +50,27 @@ Widget build(BuildContext context) {
             children: [
               Positioned(
                 top: 0,
-                height: screenHeight * 0.20, // 20% of screen height
+                height: screenHeight * 0.21, // 20% of screen height
                 left: 0,
                 right: 0,
-                child: Scoreboard(matchEngine: matchEngine),
+                child: Scoreboard(matchEngine: matchEngine,
+                                  height: screenHeight * 0.21),
               ),
               Positioned(
-                top: screenHeight * 0.225,
-                height: screenHeight * 0.15,
+                top: screenHeight * 0.23,
+                height: screenHeight * 0.2,
                 left: 0,
                 right: 0,
-                child: StatBox(matchEngine: matchEngine),
+                child: StatBox(matchEngine: matchEngine,
+                               height: screenHeight * 0.2),
               ),
               Positioned(
-                top: screenHeight * 0.4,
-                height: screenHeight * 0.6,
+                top: screenHeight * 0.45,
+                height: screenHeight * 0.55,
                 left: 0,
                 right: 0,
-                child: NumPad(matchEngine: matchEngine),
+                child: NumPad(matchEngine: matchEngine,
+                              height: screenHeight * 0.55),
               ),
             ],
           );

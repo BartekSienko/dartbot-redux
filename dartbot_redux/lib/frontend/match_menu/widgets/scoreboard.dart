@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class Scoreboard extends StatefulWidget{
   final MatchEngine matchEngine;
+  final double height;
   
   const Scoreboard({
     super.key,
-    required this.matchEngine
+    required this.matchEngine,
+    required this.height
   });
 
   @override
@@ -18,6 +20,7 @@ class Scoreboard extends StatefulWidget{
 
 class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
+  late double height;
 
 
   @override
@@ -45,13 +48,14 @@ void initState() {
   Widget build(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
   
+  
   DartPlayer player1 = matchEngine.player1;
   DartPlayer player2 = matchEngine.player2;
   
   
   
-  double nameFontSize = screenWidth / 28;
-  double numberFontSize = screenWidth / 28;
+  double nameFontSize = screenWidth / 24;
+  double numberFontSize = screenWidth / 25;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
   Color nameTextColor = Colors.black;
@@ -59,7 +63,11 @@ void initState() {
   Color numberTextColor = Colors.white;
   Color numberBGColor = Colors.green;
 
-  return Table(
+  return Container(
+    color: Colors.white,
+    child: Column(
+  children: [ Expanded( 
+      child: Table(
           columnWidths: {
             0: FlexColumnWidth(6),
             1: FlexColumnWidth(1.95),
@@ -87,10 +95,67 @@ void initState() {
               buildScoreText(player2.score.toString(), numberFontSize, numberTextColor, numberBGColor),
           ]),
           ],
-        );
+        )
+  )]
+    )
+  );
   }
 
-  Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
+Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
+  double tableHeight = widget.height / 3; // 1/3 * 0.24 = 0.08
+
+  double adjustedFontSize = fontSize;
+
+  if (text.length > 16) {
+    adjustedFontSize = adjustedFontSize * 0.75;
+  }
+
+
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      
+      return SizedBox(
+    height: tableHeight,  // or any fixed height you want
+    child: Stack(
+        children: [
+          // Two-tone background, fills entire cell
+          Positioned.fill(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(color: backgroundColor.withAlpha(230)), // top half
+                ),
+                Expanded(
+                  child: Container(color: backgroundColor), // bottom half
+                ),
+              ],
+            ),
+          ),
+
+          // Centered text
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(adjustedFontSize / 2), // Optional padding
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: adjustedFontSize,
+                  color: textColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      )
+      );
+    },
+  );
+}
+
+
+
+  Widget buildScoreText2(String text, double fontSize, Color textColor, Color backgroundColor) {
   return Stack(
     children: [
       

@@ -7,10 +7,12 @@ import 'package:flutter/material.dart';
 
 class StatBox extends StatefulWidget{
   final MatchEngine matchEngine;
+  final double height;
   
   const StatBox({
     super.key,
-    required this.matchEngine
+    required this.matchEngine,
+    required this.height
   });
 
   @override
@@ -20,6 +22,7 @@ class StatBox extends StatefulWidget{
 
 class _StatBoxState extends State<StatBox> {
   late MatchEngine matchEngine;
+  late double height;
 
 
 
@@ -49,18 +52,21 @@ class _StatBoxState extends State<StatBox> {
     double screenWidth = MediaQuery.of(context).size.width;
 
 
-    return Row(
+    return SizedBox(
+    height: widget.height,
+    child: Row(
       children: [
-        Expanded(flex: 40, child: boxCreate(screenWidth, true)),
-        Expanded(flex: 20, child: Container()),
-        Expanded(flex: 40, child: boxCreate(screenWidth, false)),
+        Expanded(flex: 45, child: boxCreate(screenWidth, true)),
+        Expanded(flex: 10, child: Container()),
+        Expanded(flex: 45, child: boxCreate(screenWidth, false)),
       ],
+    )
     );
     
   }
 
   Widget boxCreate(double screenWidth, bool isLeft) {
-    double statFontSize = screenWidth / 40;
+    double statFontSize = screenWidth / 32;
     Color textColor = Colors.white;
     Color bGColor = Colors.black;
     Color themeColor = Colors.green;
@@ -89,14 +95,16 @@ class _StatBoxState extends State<StatBox> {
 
     List<String> stats = [average, last, dartsThrown, checkouts];
 
+
     return Column(
+      
       children: [
         // Player Name
-        buildNameText(player.name, statFontSize, textColor, bGColor),
+        Expanded(flex: 25, child: buildNameText(player.name, statFontSize, textColor, bGColor)),
         //Player Stats
-        buildStatText(stats, statFontSize, textColor, themeColor, isLeft)
+        Expanded(flex: 75, child: buildStatText(stats, statFontSize, textColor, themeColor, isLeft))
       ],
-    );
+      );
   }
 
   Widget buildNameText(String text, double fontSize, Color textColor, Color backgroundColor) {
@@ -118,7 +126,7 @@ class _StatBoxState extends State<StatBox> {
 
       Container(
         alignment: Alignment.center,
-        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize / 2),  // Padding inside container, not outside
         child: Text(
             text,
             style: TextStyle(
@@ -163,7 +171,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
       child: Container(
         color: leftColor,
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize / 2),  // Padding inside container, not outside
         child: Text(
             leftText,
             style: TextStyle(
@@ -179,7 +187,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
       child: Container(
         color: rightColor,
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
+        padding: EdgeInsets.all(fontSize / 2),  // Padding inside container, not outside
         child: Text(
             rightText,
             style: TextStyle(
