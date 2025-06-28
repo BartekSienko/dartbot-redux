@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 
 class NumPad extends StatefulWidget{
   final MatchEngine matchEngine;
+  final double height;
 
   
   const NumPad({
     super.key,
-    required this.matchEngine
+    required this.matchEngine,
+    required this.height
   });
 
   @override
@@ -27,6 +29,21 @@ class _NumPadState extends State<NumPad> {
   void initState() {
     super.initState();
     matchEngine = widget.matchEngine;
+
+    matchEngine.addListener(_onMatchEngineUpdate);  
+
+  }
+
+      @override
+  void dispose() {
+    matchEngine.removeListener(_onMatchEngineUpdate);
+    super.dispose();
+  }
+
+  void _onMatchEngineUpdate() {
+    setState(() {
+      // Rebuild the widget whenever MatchEngine notifies
+    });
   }
   
   @override
@@ -40,29 +57,45 @@ class _NumPadState extends State<NumPad> {
   Color themeColor = Colors.green;
 
 
-  return Column(
-    children: [
-
-    //Text Field
-    buildTextField(fontSize, numPadTextColor, themeColor),
-    // NumPad
-    buildNumPad(numFontSize, numPadTextColor, numPadBGColor)
-    ]
+  return SizedBox(
+    height: widget.height, // total height
+    child: Column(
+  children: [SizedBox(
+      height: widget.height * 1 / 5, // Added due to rounding errors
+      child: buildTextField(fontSize, numPadTextColor, themeColor),
+      ),
+      SizedBox(
+      height: widget.height * 4 / 5, // Added due to rounding errors
+      child: buildNumPad(numFontSize, numPadTextColor, numPadBGColor),
+    ),
+  ],
+)
   );
-  
+
   }
 
 
   Widget buildTextField(double fontSize, Color textColor, Color bGColor) {
-      return Column(
+      String playerName;
+      if (matchEngine.throwing == 1) {
+        playerName = matchEngine.player1.name;
+      } else {
+        playerName = matchEngine.player2.name;
+      }
+      
+
+      return Container(
+    color: Colors.white,
+    child: Column( children: [ Expanded(
+      child: Column(
         children: [
           //Green textbox
             Container(
             color: bGColor,
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.all(fontSize * 0.8),  // Padding inside container, not outside
+            padding: EdgeInsets.all(fontSize * 0.7),  // Padding inside container, not outside
             child: Text(
-                "${matchEngine.player1.name} turn to throw!",
+                "$playerName turn to throw!",
                 style: TextStyle(
                   fontSize: fontSize,
                   color: textColor,
@@ -75,7 +108,7 @@ class _NumPadState extends State<NumPad> {
           Container(
             color: Colors.white,
             alignment: Alignment.centerLeft,
-            padding:  EdgeInsets.all((fontSize * 0.8)),  // Padding inside container, not outside
+            padding:  EdgeInsets.all((fontSize * 0.7)),  // Padding inside container, not outside
             child: Text(
                 "Total Score: $inputingScore",
                 style: TextStyle(
@@ -86,15 +119,18 @@ class _NumPadState extends State<NumPad> {
               ),
             )
           ],
-      );
+      ))]));
   }
 
   Widget buildNumPad(double fontSize, Color textColor, Color bGColor) {
     
 
     
-    return Table(
-      defaultVerticalAlignment: TableCellVerticalAlignment.bottom,
+    return Container(
+    color: Colors.white,
+    child: Column( children: [ Expanded(
+      child: Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
             TableRow(children: [
               buildNumber("1", fontSize, textColor, bGColor),
@@ -122,7 +158,7 @@ class _NumPadState extends State<NumPad> {
             ),
 
       ]
-    );
+    ))]));
   }
 
   Widget buildNumber(
@@ -131,7 +167,12 @@ class _NumPadState extends State<NumPad> {
   Color textColor,
   Color bGColor,
 ) {
-  return TextButton(
+  double boxHeight = widget.height * 0.2; // 0.5 * 1/4
+
+
+  return SizedBox(
+    height: boxHeight,
+    child: TextButton(
     style: ButtonStyle(
       padding: WidgetStateProperty.all(EdgeInsets.zero), // remove default padding
       backgroundColor: WidgetStateProperty.all(bGColor), // base background color
@@ -142,6 +183,7 @@ class _NumPadState extends State<NumPad> {
     onPressed: () => handleButtonPress(number),
     child: Stack(
       children: [
+        Container(color: Colors.white),
         Positioned.fill(
           child: Column(
             children: [
@@ -154,20 +196,22 @@ class _NumPadState extends State<NumPad> {
             ],
           ),
         ),
-        Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(fontSize * 0.87), // inside padding
-          child: Text(
-            number,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
+        Center(
+            child: Padding(
+              padding: EdgeInsets.all(fontSize / 2), // Optional padding
+              child: Text(
+                number,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: textColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-        ),
+          )
       ],
     ),
+  )
   );
 }
 
@@ -177,7 +221,8 @@ void handleButtonPress(String number) {
     inputingScore += number; // update the state variable
     });
   } else if (number == ">") {
-    //Send as a dart throw
+    matchEngine.visitThrow(int.tryParse(inputingScore)!);
+    inputingScore = "";
   } else if (number == "C") {
     setState(() {
     inputingScore = ""; // update the state variable

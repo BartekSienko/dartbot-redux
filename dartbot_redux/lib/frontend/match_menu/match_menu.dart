@@ -1,35 +1,30 @@
 // ignore_for_file: file_names
 
-import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
-import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/num_pad.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/stat_box.dart';
 import 'package:flutter/material.dart';
 
 
-class MainMenu extends StatefulWidget{
-  const MainMenu({super.key});
+class MatchMenu extends StatefulWidget{
+  final MatchEngine matchEngine;
+
+  const MatchMenu({super.key, required this.matchEngine});
 
   @override
-  State<MainMenu> createState() => _MainMenuState();
+  State<MatchMenu> createState() => _MatchMenuState();
 }
 
-class _MainMenuState extends State<MainMenu> {
-  MatchEngine matchEngine = MatchEngine(DartPlayer("L. Humphries", 10.0), 
-                                        DartPlayer("L. Littler (ENG) (32)", 10.0),
-                                        MatchLogic(501, 3, false, 0, true, false));
+class _MatchMenuState extends State<MatchMenu> {
+  late MatchEngine matchEngine;
+
 
   @override
   void initState(){
     super.initState();
-    DartPlayer player1 = matchEngine.player1;
-    DartPlayer player2 = matchEngine.player2;
-    player1.score = 501;
-    player2.score = 321;
-    player2.legs = 1;
-    player2.dartThrow(180, true, 0);
+    matchEngine = widget.matchEngine;
+    matchEngine.initMatch();
   }
   
 
@@ -40,9 +35,8 @@ class _MainMenuState extends State<MainMenu> {
   @override
 Widget build(BuildContext context) {
 
-  return MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: Scaffold(
+  return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 50, 96, 51),
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: const Text('Dartbot Redux'),
@@ -56,31 +50,34 @@ Widget build(BuildContext context) {
             children: [
               Positioned(
                 top: 0,
-                height: screenHeight * 0.20, // 20% of screen height
+                height: screenHeight * 0.21, // 20% of screen height
                 left: 0,
                 right: 0,
-                child: Scoreboard(matchEngine: matchEngine),
+                child: Scoreboard(matchEngine: matchEngine,
+                                  height: screenHeight * 0.21),
               ),
               Positioned(
-                top: screenHeight * 0.21,
-                height: screenHeight * 0.15,
+                top: screenHeight * 0.23,
+                height: screenHeight * 0.2,
                 left: 0,
                 right: 0,
-                child: StatBox(matchEngine: matchEngine),
+                child: StatBox(matchEngine: matchEngine,
+                               height: screenHeight * 0.2),
               ),
               Positioned(
-                top: screenHeight * 0.4,
-                height: screenHeight * 0.6,
+                top: screenHeight * 0.45,
+                height: screenHeight * 0.55,
                 left: 0,
                 right: 0,
-                child: NumPad(matchEngine: matchEngine),
+                child: NumPad(matchEngine: matchEngine,
+                              height: screenHeight * 0.55),
               ),
             ],
           );
         },
       ),
-    ),
   );
+    
 }
 
 }

@@ -26,35 +26,25 @@ class DartPlayer {
     }
   }
 
-  /// TODO: Rewrite function when connecting to frontend (Visits)
-  void visitThrow(bool isDoubleOut, bool isDoubleIn) {
-    int pointsScored = 0;
-    bool legalScore = false;
-    print('$name to throw: ');
-    while (!legalScore) {
-      int? input = int.tryParse(stdin.readLineSync()!);
-      if (input is int) {
-        pointsScored = input;
-        legalScore = true;
-      } else {
-        legalScore = false;
-        continue;
-      }
-      legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut);
+  bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
+    bool legalScore = true;
+      legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut, errorString);
       if (score == pointsScored) {
-        legalScore = legalScore && checkLegalDoubleScore(pointsScored, true);
-      } else if (stats.dartsThrownLeg == 0 && isDoubleIn) {
-        legalScore = legalScore && checkLegalDoubleScore(pointsScored, false);
+        legalScore = legalScore && checkLegalDoubleScore(pointsScored, true, errorString);
+      } 
+      if (stats.dartsThrownLeg == 0 && isDoubleIn) {
+        legalScore = legalScore && checkLegalDoubleScore(pointsScored, false, errorString);
       }
+    return legalScore;
     }
 
-    int dartsAtDouble = visitDoubles(pointsScored);
-    stats.doublesAttempted += dartsAtDouble;
-    int dartsAtCheckout = visitCheckout(pointsScored, dartsAtDouble);
+    //int dartsAtDouble = visitDoubles(pointsScored);
+    //stats.doublesAttempted += dartsAtDouble;
+    //int dartsAtCheckout = visitCheckout(pointsScored, dartsAtDouble);
 
-    score -= pointsScored;
-    dartThrow(pointsScored, isDoubleOut, dartsAtCheckout);
-  }
+    //score -= pointsScored;
+    //dartThrow(pointsScored, isDoubleOut, dartsAtCheckout);
+  
 
   /// TODO: Rewrite function when connecting to frontend (Doubles)
   int visitDoubles(int pointsScored) {
@@ -101,28 +91,28 @@ class DartPlayer {
     }
   }
 
-  bool checkLegalScore(int pointsScored, bool isDoubleOut) {
+  bool checkLegalScore(int pointsScored, bool isDoubleOut, String errorString) {
     Set<int> impossibleScores = HashSet<int>.from([179, 178, 176, 175, 173, 172, 169, 166, 163]);
     if (impossibleScores.contains(pointsScored) || pointsScored > 180) {
-      print("Impossible score inputed");
+      errorString = ("Impossible score inputed");
       return false;
     } else if (pointsScored > score) {
-      print("BUST! Too large score inputed (please input 0)");
+      errorString = ("BUST! Too large score inputed (please input 0)");
       return false;
     } else if (isDoubleOut && (score - pointsScored == 1)) {
-      print("BUST! You cannot checkout 1 (please input 0)");
+      errorString = ("BUST! You cannot checkout 1 (please input 0)");
       return false;
     }
     return true;
   }
 
-  bool checkLegalDoubleScore(int pointsScored, bool outNotIn) {
+  bool checkLegalDoubleScore(int pointsScored, bool outNotIn, String errorString) {
     Set<int> impossibleCheckouts = HashSet<int>.from([169, 168, 166, 165, 163, 162, 159]);
     if (impossibleCheckouts.contains(pointsScored) || pointsScored > 170) {
       if (outNotIn) {
-        print("Impossible checkout inputed");
+        errorString = ("Impossible checkout inputed");
       } else {
-        print("Impossible start score inputed");
+        errorString = ("Impossible start score inputed");
       }
       return false;
     }

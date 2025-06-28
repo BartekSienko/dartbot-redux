@@ -1,170 +1,248 @@
-// ignore_for_file: unnecessary_this, file_names, avoid_print
-
-
-
-
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
+import 'package:flutter/material.dart';
 
-class MatchEngine {
+class MatchEngine extends ChangeNotifier{
+  BuildContext context;
   DartPlayer player1;
   DartPlayer player2;
   final MatchLogic matchRules;
-  int onThrow = 2;
-  int onThrowSet = 2;
+  int throwing = 1;
+  int onThrow = 1;
+  int onThrowSet = 1;
 
 
-  MatchEngine(this.player1, this.player2, this.matchRules);
+  MatchEngine(this.player1, this.player2, this.matchRules, this.context);
+
+  void initMatch() {
+    newLeg();
+    onThrow = 1;
+    onThrowSet = 1;
+    throwing = 1;
+    if (player1 is DartBot) {
+      DartBot p1 = player1 as DartBot;
+      p1.visitThrow(0, matchRules.doubleOut, 
+                            matchRules.doubleIn, "");
+      notifyListeners();
+      throwing = 2;
+    }
+  }
 
   void newLeg() {
-        this.player1.score = matchRules.getStartScore();
-        this.player1.stats.dartsThrownLeg = 0;
-        this.player2.score = matchRules.getStartScore();
-        this.player2.stats.dartsThrownLeg = 0;
-        if (this.onThrow == 1) {
-            this.onThrow = 2;
+        player1.score = matchRules.getStartScore();
+        player1.stats.dartsThrownLeg = 0;
+        player2.score = matchRules.getStartScore();
+        player2.stats.dartsThrownLeg = 0;
+        if (onThrow == 1) {
+            onThrow = 2;
         } else {
-            this.onThrow = 1;
+            onThrow = 1;
         }
-        if (this.player1.legs == 0 && this.player2.legs == 0) {
-            if (this.onThrowSet == 1) {
-                this.onThrow = 2;
-                this.onThrowSet = 2;
+        if (player1.legs == 0 && player2.legs == 0) {
+            if (onThrowSet == 1) {
+                onThrow = 2;
+                onThrowSet = 2;
             } else {
-                this.onThrow = 1;
-                this.onThrowSet = 1;
+                onThrow = 1;
+                onThrowSet = 1;
             }
         }
+        throwing = onThrow;
     }
 
-    void playLeg(bool ifQuickSim) {
-        this.newLeg();
-        int playerToThrow = this.onThrow;
-        while (this.player1.score > 0 && this.player2.score > 0) {
-            if (playerToThrow == 1) {
-                bool doubleInOpener = this.matchRules.ifDoubleIn() && this.player1.score == this.matchRules.getStartScore();
-                this.player1.visitThrow(this.matchRules.ifDoubleOut(), doubleInOpener);
-                playerToThrow = 2;
-            } else {
-                bool doubleInOpener = this.matchRules.ifDoubleIn() && this.player2.score == this.matchRules.getStartScore();
-                this.player2.visitThrow(this.matchRules.ifDoubleOut(), doubleInOpener);
-                playerToThrow = 1;
-            }
 
-            if (!ifQuickSim) {
-                if (matchRules.isSetPlay) {
-                    print(this.player1.toStringSetPlay());
-                    print(this.player2.toStringSetPlay());
-                } else {
-                    print(this.player1.toString());
-                    print(this.player2.toString());
-                }
-                print('');
-            }
-        }
 
-        DartPlayer? hasWonLeg = this.ifWonLeg();
-        if (hasWonLeg != null) {
-            if (hasWonLeg.equals(this.player1)) {
-                if (!ifQuickSim) print("${this.player1.name} has won the leg!");
-                this.player1.updateBestWorstLegs();
-            } else {
-                if (!ifQuickSim) print("${this.player2.name} has won the leg!");
-                this.player2.updateBestWorstLegs();
-            }
-            
-            DartPlayer? hasWonSet = this.ifWonSet();
-            if (hasWonSet != null) {
-                if (hasWonSet.equals(this.player1)) {
-                    if (!ifQuickSim) print("${this.player1.name} has won the set!");
-                } else {
-                    if (!ifQuickSim) print("${this.player2.name} has won the set!");
-                }
-            }
-        } 
-
-        if (!ifQuickSim) {
-            if (matchRules.isSetPlay) {
-                print(this.toStringSetPlay());
-            } else {
-                print(this.toString());
-            }
-        }
+  bool visitThrow(int pointsScored) {
+    DartPlayer playerThrowing;
+    if (throwing == 1) {
+      playerThrowing = player1;
+    } else {
+      playerThrowing = player2;
     }
 
-  DartPlayer? ifWonSet() {
-        if (!matchRules.isSetPlay) {
-            return null;
-        }
-
-        if (this.player1.legs >= matchRules.getLegLimit()) {
-            this.player1.sets++;
-            this.player1.legs = 0;
-            this.player2.legs = 0;
-            return this.player1;
-        } else if (this.player2.legs >= matchRules.getLegLimit()) {
-            this.player2.sets++;
-            this.player1.legs = 0;
-            this.player2.legs = 0;
-            return this.player2;
-        }
-        return null;
-    }
-
-    DartPlayer? ifWonLeg() {
-        if (this.player1.score <= 0) {
-            this.player1.legs++;
-            this.player2.score = 0;
-            return this.player1;
-        } else if (this.player2.score <= 0) {
-            this.player2.legs++;
-            this.player1.score = 0;
-            return this.player2;
-        }
-
-        return null;
-    }
-
-    DartPlayer? ifWinner(DartPlayer player) {
-        if (matchRules.isSetPlay) {
-            if (player.sets >= matchRules.getSetLimit()) {
-                return player;
-            } 
-            return null;
-        } else {
-            if (player.legs >= matchRules.getLegLimit()) {
-                return player;
-            }
-            return null;
-        }
-    }
-
-    @override
-    String toString() {
-        return "Current Result:\nLeg|Scr\n(${player1.legs}) (${player1.score}) ${player1.name}\n(${player2.legs}) (${player2.score}) ${player2.name}";
-
-        
-    }
-
-     String toStringSetPlay() {
-        return "Current Result:\nSet|Leg|Scr\n(${player1.sets}) (${player1.legs}) (${player1.score}) ${player1.name}\n(${player2.sets}) (${player2.legs}) (${player2.score}) ${player2.name}";
-    }
-
-    @override
-    bool operator ==(Object other) {
-      if (identical(this, other)) return true;
-      if (other is! MatchEngine) return false;
-  
-      return this.player1 == other.player1 &&
-              this.player2 == other.player2 &&
-              this.matchRules == other.matchRules;
-
-    }
-
-    @override
-    int get hashCode {
-      return this.player1.hashCode + this.player2.hashCode;
-  }
+    String errorString = "";
+    bool successfulThrow = playerThrowing.visitThrow(pointsScored, 
+                                                     matchRules.doubleOut, 
+                                                     matchRules.doubleIn, 
+                                                     errorString);
     
+    if (!successfulThrow) {
+      /// Is going to be replaced with a pop-up
+      print("ERROR: $errorString");
+      return false;
+    }
+    
+    /// TODO: ADD POP-UP FOR DOUBLES AND DARTS AT CHECKOUT
+    
+    
+    playerThrowing.score -= pointsScored;
+    playerThrowing.dartThrow(pointsScored, matchRules.doubleOut, 3);
+
+    // Hands the "turn" to the next player
+    if (throwing == 1) {
+      throwing = 2;
+    } else {
+      throwing = 1;
+    }
+  
+    
+    checkForFinishedLeg();
+    
+    notifyListeners();
+
+    checkForDartBot();
+
+
+    return true;
+  }
+
+
+  void checkForDartBot() {
+    if (throwing == 1 && player1 is DartBot) {
+      DartBot p1 = player1 as DartBot;
+      p1.visitThrow(0, matchRules.doubleOut, 
+                            matchRules.doubleIn, "");
+    } else if (throwing == 1) {
+      return;
+    } else if (throwing == 2 && player2 is DartBot) {
+      DartBot p2 = player2 as DartBot;
+      p2.visitThrow(0, matchRules.doubleOut, 
+                            matchRules.doubleIn, "");
+    } else if (throwing == 2) {
+      return;
+    }
+
+    if (throwing == 1) {
+      throwing = 2;
+    } else {
+      throwing = 1;
+    }
+  
+    
+    checkForFinishedLeg();
+    
+    notifyListeners();
+
+    checkForDartBot();
+  }
+
+  
+  void checkForFinishedLeg() {
+    if (player1.score <= 0) {
+      player1.legs++;
+      player2.score = 0;
+      checkForNewBestWorst(player1);
+      checkForMatchWinner(player1);
+      newLeg();
+    } else if (player2.score <= 0) {
+      player2.legs++;
+      player1.score = 0;
+      checkForNewBestWorst(player2);
+      checkForMatchWinner(player2);
+      newLeg();
+    }
+
+    if (matchRules.isSetPlay) {
+      checkForFinishedSet();
+    }
+
+  }
+
+  void checkForNewBestWorst(DartPlayer player) {
+    int dartsThrown = player.stats.dartsThrownLeg;
+    if (player.stats.bestLeg == 0) {
+      player.stats.bestLeg = dartsThrown;
+      player.stats.worstLeg = dartsThrown;
+    } else if (player.stats.bestLeg > dartsThrown) {
+      player.stats.bestLeg = dartsThrown;
+    } else if (player.stats.worstLeg < dartsThrown) {
+      player.stats.worstLeg = dartsThrown;
+    }
+  }
+
+  void checkForFinishedSet() {
+    if (player1.legs >= matchRules.getLegLimit()) {
+            player1.sets++;
+            player1.legs = 0;
+            player2.legs = 0;
+            checkForMatchWinner(player1);
+            newLeg();
+        } else if (player2.legs >= matchRules.getLegLimit()) {
+            player2.sets++;
+            player1.legs = 0;
+            player2.legs = 0;
+            checkForMatchWinner(player2);
+            newLeg();
+        }
+  }
+
+  void checkForMatchWinner(DartPlayer player) {
+    if (matchRules.isSetPlay) {
+      if (player.sets >= matchRules.setLimit) {
+        showMatchStats(context);
+      }
+    } else {
+      if (player.legs >= matchRules.legLimit) {
+       showMatchStats(context);
+      }
+    }
+  }
+
+  Widget generateMatchStats() {
+    PlayerMatchStats p1Stats = player1.stats;
+    PlayerMatchStats p2Stats = player2.stats;
+    return Table(
+      children: [
+        generateStatRow(player1.name, "Stats", player2.name),
+        generateStatRow(p1Stats.getListAverage(p1Stats.scores).toString(), "3DA", p2Stats.getListAverage(p2Stats.scores).toString()),
+        generateStatRow(p1Stats.getListAverage(p1Stats.first9scores).toString(), "First 9", p2Stats.getListAverage(p2Stats.first9scores).toString()),
+        generateStatRow(p1Stats.getCheckoutSplit(), "Checkouts", p2Stats.getCheckoutSplit()),
+        generateStatRow(p1Stats.getHighestFromList(p1Stats.scores).toString(), "High Score", p2Stats.getHighestFromList(p2Stats.scores).toString()),
+        generateStatRow(p1Stats.getHighestFromList(p1Stats.checkouts).toString(), "High. Out", p2Stats.getHighestFromList(p2Stats.checkouts).toString()),
+        generateStatRow(p1Stats.bestLeg.toString(), "Best Leg", p2Stats.bestLeg.toString()),
+        generateStatRow(p1Stats.worstLeg.toString(), "Worst Leg", p2Stats.worstLeg.toString()),
+      
+        ]);
+  }
+
+  TableRow generateStatRow(String text1, String text2, String text3) {
+    return TableRow(children: [
+          Align(alignment: Alignment.centerRight, child: Text(text1, style: TextStyle(fontSize: 12),)),
+          Align(alignment: Alignment.center,      child: Text(text2, style: TextStyle(fontSize: 12))),
+          Align(alignment: Alignment.centerLeft,  child: Text(text3, style: TextStyle(fontSize: 12))),
+
+    ]
+    );
+
+  }
+
+
+  void showMatchStats(BuildContext context) {
+
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Center(child: Text('Match Stats')),
+        content: generateMatchStats(),
+        actions: [
+          TextButton(
+            child: Text('Close'),
+            
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // close the dialog
+              Navigator.of(context).pop();       // pop the page
+            },
+          ),
+        ],
+      );
+    },
+  );
+
+  
+}
+
 }

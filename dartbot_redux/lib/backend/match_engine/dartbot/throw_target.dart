@@ -20,7 +20,6 @@ class ThrowTarget {
         } else if (this.multiplier == 2 && this.number == 25) {
             return "Bullseye";
         }
-        /// FIXME: Change into a runtime exception
         throw Exception("Illegal Multiplier located");
     }
 
@@ -46,7 +45,6 @@ class ThrowTarget {
 
     @override
     String toString() {
-      /// FIXME: Change into a runtime exception
         if ((this.number > 20 && this.number != 25) || this.number < 0) {
             throw Exception("Illegal Number Located");
         }

@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 class Scoreboard extends StatefulWidget{
   final MatchEngine matchEngine;
+  final double height;
   
   const Scoreboard({
     super.key,
-    required this.matchEngine
+    required this.matchEngine,
+    required this.height
   });
 
   @override
@@ -18,26 +20,42 @@ class Scoreboard extends StatefulWidget{
 
 class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
-
+  late double height;
 
 
   @override
-  void initState() {
-    super.initState();
-    matchEngine = widget.matchEngine;
+void initState() {
+  super.initState();
+  matchEngine = widget.matchEngine;
+
+  // Add listener to rebuild the widget when MatchEngine notifies
+    matchEngine.addListener(_onMatchEngineUpdate);  
+}
+
+    @override
+  void dispose() {
+    matchEngine.removeListener(_onMatchEngineUpdate);
+    super.dispose();
+  }
+
+  void _onMatchEngineUpdate() {
+    setState(() {
+      // Rebuild the widget whenever MatchEngine notifies
+    });
   }
   
   @override
   Widget build(BuildContext context) {
   double screenWidth = MediaQuery.of(context).size.width;
   
+  
   DartPlayer player1 = matchEngine.player1;
   DartPlayer player2 = matchEngine.player2;
   
   
   
-  double nameFontSize = screenWidth / 28;
-  double numberFontSize = screenWidth / 28;
+  double nameFontSize = screenWidth / 24;
+  double numberFontSize = screenWidth / 25;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
   Color nameTextColor = Colors.black;
@@ -45,7 +63,11 @@ class _ScoreboardState extends State<Scoreboard> {
   Color numberTextColor = Colors.white;
   Color numberBGColor = Colors.green;
 
-  return Table(
+  return Container(
+    color: Colors.white,
+    child: Column(
+  children: [ Expanded( 
+      child: Table(
           columnWidths: {
             0: FlexColumnWidth(6),
             1: FlexColumnWidth(1.95),
@@ -55,7 +77,7 @@ class _ScoreboardState extends State<Scoreboard> {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
             TableRow(children: [
-              buildScoreText("First to 3 Legs", nameFontSize, topRowTextColor, topRowBGColor),
+              buildScoreText("First to ${matchEngine.matchRules.legLimit} Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Score", nameFontSize, topRowTextColor, topRowBGColor),
@@ -65,18 +87,75 @@ class _ScoreboardState extends State<Scoreboard> {
               buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.score.toString(), numberFontSize, numberTextColor, numberBGColor),
-            ]),
+          ]),
             TableRow(children: [
               buildScoreText(player2.name, nameFontSize, nameTextColor, nameBGColor),
               buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.score.toString(), numberFontSize, numberTextColor, numberBGColor),
-            ]),
+          ]),
           ],
-        );
+        )
+  )]
+    )
+  );
   }
 
-  Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
+Widget buildScoreText(String text, double fontSize, Color textColor, Color backgroundColor) {
+  double tableHeight = widget.height / 3; // 1/3 * 0.24 = 0.08
+
+  double adjustedFontSize = fontSize;
+
+  if (text.length > 16) {
+    adjustedFontSize = adjustedFontSize * 0.75;
+  }
+
+
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      
+      return SizedBox(
+    height: tableHeight,  // or any fixed height you want
+    child: Stack(
+        children: [
+          // Two-tone background, fills entire cell
+          Positioned.fill(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Container(color: backgroundColor.withAlpha(230)), // top half
+                ),
+                Expanded(
+                  child: Container(color: backgroundColor), // bottom half
+                ),
+              ],
+            ),
+          ),
+
+          // Centered text
+          Center(
+            child: Padding(
+              padding: EdgeInsets.all(adjustedFontSize / 2), // Optional padding
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: adjustedFontSize,
+                  color: textColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ],
+      )
+      );
+    },
+  );
+}
+
+
+
+  Widget buildScoreText2(String text, double fontSize, Color textColor, Color backgroundColor) {
   return Stack(
     children: [
       

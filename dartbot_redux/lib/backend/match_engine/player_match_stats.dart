@@ -45,6 +45,9 @@ class PlayerMatchStats {
   }
 
   double getListAverage(List<int> list) {
+  if (list.isEmpty) {
+    return 0.0;
+  }
   double sum = 0;
   for (int i in list) {
     sum += i;

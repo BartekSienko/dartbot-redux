@@ -23,11 +23,16 @@ class DartBot extends DartPlayer {
       DistributionTable("Bullseye", rating),
     ];
 
-    ThrowTarget getThrowTarget(bool isDoubleIn) {
+    ThrowTarget getThrowTarget(bool isDoubleIn, bool isDoubleOut) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
         if (isDoubleIn) {
             return ThrowTarget(2, 20);
+        }
+
+        if (!isDoubleOut && remainingScore <= 20) {
+          print("Looked here");
+          return ThrowTarget(1, remainingScore);
         }
         
         if (this.dartsInHand == 3 && remainingScore % 3 == 0 && (123 <= remainingScore && remainingScore <= 129)) {
@@ -166,21 +171,21 @@ class DartBot extends DartPlayer {
     }
 
     @override
-    void visitThrow(bool isDoubleOut, bool isDoubleIn) {
+    bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
         this.dartsInHand = 3;
         int scoreBeforeVisit = this.score;
         this.scoreThisVisit = 0;
         while (dartsInHand > 0) {
-            int currentThrow = oneDartThrow(isDoubleIn);
+            int currentThrow = oneDartThrow(isDoubleIn, isDoubleOut);
             this.scoreThisVisit += currentThrow;
             this.score -= currentThrow;
             this.dartsInHand--;
             if (this.score == 1 || this.score < 0 || (this.score == 0 
-                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn))) {
+                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn, ""))) {
                 this.score = scoreBeforeVisit;
                 this.dartThrow(0, isDoubleOut, 3);
                 print("Bust score!"); // Removed for QuickSims
-                return;
+                return false;
             } else if ((this.score) == 0) {
                 break;
             }
@@ -188,11 +193,15 @@ class DartBot extends DartPlayer {
 
         this.dartThrow(this.scoreThisVisit, isDoubleOut, 3 - dartsInHand);
 
+        // Hands the "turn" to the next player
+        return true;
+
+
     }
 
 
-    int oneDartThrow(bool isDoubleIn) {
-        ThrowTarget target = getThrowTarget(isDoubleIn);
+    int oneDartThrow(bool isDoubleIn, bool isDoubleOut) {
+        ThrowTarget target = getThrowTarget(isDoubleIn, isDoubleOut);
         DistributionTable distroTable;
         if (target.number == 25) {
             distroTable = this.distroTables[3];
@@ -216,12 +225,12 @@ class DartBot extends DartPlayer {
 
     @override
     String toString() {
-        return "($this.legs) $this.score $this.name (Bot)";
+      return "($legs) $score $name (Bot)";
     }
 
     @override
     String toStringSetPlay() {
-        return "($this.sets) ($this.legs) $this.score $this.name (Bot)";
+        return "($sets) ($legs) $score $name (Bot)";
     }
 
 
