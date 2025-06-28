@@ -1,4 +1,4 @@
-import 'package:dartbot_redux/frontend/match_menu/setup_menu.dart';
+import 'package:dartbot_redux/frontend/main_menu.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
       ),
-      home: const SetupMenu(),  // <-- Start here
+      home: const MainMenu(),  // <-- Start here
     );
   }
 }

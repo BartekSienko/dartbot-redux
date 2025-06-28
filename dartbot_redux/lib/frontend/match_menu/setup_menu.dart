@@ -41,11 +41,11 @@ class _SetupMenuState extends State<SetupMenu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('DartBot - Match Setup')),
+        appBar: AppBar(title: Text('DartBot - Match Setup'), backgroundColor: Colors.green,),
         body: Container(
             padding: EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Color.fromARGB(255, 240, 240, 207),
               border: Border.all(color: const Color.fromARGB(255, 0, 0, 0)),
             ),
             child: Column(
