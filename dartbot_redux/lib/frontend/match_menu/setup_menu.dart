@@ -15,17 +15,22 @@ class SetupMenu extends StatefulWidget{
 
 class _SetupMenuState extends State<SetupMenu> {
     // Controllers
+  final matchTitleController = TextEditingController();
+  final matchThemeController = TextEditingController();
   final player1nameController = TextEditingController();
   final player2nameController = TextEditingController();
   final player1ratingController = TextEditingController();
   final player2ratingController = TextEditingController();
   final startScoreController = TextEditingController();
   final legCountController = TextEditingController();
+  final setCountController = TextEditingController();
 
 
     // Button press tracking variables
   String player1Type = '';
   String player2Type = '';
+  String doubleIn = 'Straight-In';
+  String doubleOut = 'Straight-Out';
 
 @override
   void dispose() {
@@ -64,30 +69,71 @@ class _SetupMenuState extends State<SetupMenu> {
                 ],
               ),
                SizedBox(height: 24),
+               Row(children: [
                 buildButtonPair(
                     label1: 'Player',
                     label2: 'Bot',
                     selected1: player1Type,
-                    selected2: player2Type,
                     onSelected1: (val) {
                       setState(() {
                         player1Type = val;
                       });
                     },
-                    onSelected2: (val) {
+                  ),
+                  buildButtonPair(
+                    label1: 'Player',
+                    label2: 'Bot',
+                    selected1: player2Type,
+                    onSelected1: (val) {
                       setState(() {
                         player2Type = val;
                       });
                     },
-                  ),
+                  ),]),
+
             SizedBox(height: 24),
               Row(
                 children: [
-                  buildTextWithTextField('Start Score (501/301)', startScoreController),
-                  buildTextWithTextField('Leg Count', legCountController),
+                  buildTextWithTextField('Match Title', matchTitleController),
+                  buildTextWithTextField('Match Theme', matchThemeController),
+                  
                 ],
               ),
-              
+
+            SizedBox(height: 24),
+              Row(
+                children: [
+                  buildTextWithTextField('Start Score', startScoreController),
+                  buildTextWithTextField('Leg Count', legCountController),
+                  buildTextWithTextField('Set Count', setCountController),
+                  
+                ],
+              ),
+
+              SizedBox(height: 24),
+              buildButtonPair(
+                    label1: 'Double-In',
+                    label2: 'Straight-In',
+                    selected1: doubleIn,
+                    onSelected1: (val) {
+                      setState(() {
+                        doubleIn = val;
+                      });
+                    },
+                  ),
+                buildButtonPair(
+                    label1: 'Double-Out',
+                    label2: 'Straight-Out',
+                    selected1: doubleOut,
+                    onSelected1: (val) {
+                      setState(() {
+                        doubleOut = val;
+                      });
+                    },
+                  ),
+
+              SizedBox(height: 240),
+
 
               SizedBox(height: 24),
               ElevatedButton(
@@ -96,7 +142,9 @@ class _SetupMenuState extends State<SetupMenu> {
                     Navigator.push(
                     context,
                     MaterialPageRoute(
-                    builder: (context) => MatchMenu(matchEngine: matchEngine),
+                    builder: (context) => MatchMenu(matchTitle: matchTitleController.text, 
+                                                    matchTheme: getTheme(matchThemeController.text), 
+                                                    matchEngine: matchEngine),
                     ),
                     );
                 },
@@ -135,12 +183,9 @@ class _SetupMenuState extends State<SetupMenu> {
     required String label1,
     required String label2,
     required Function(String) onSelected1,
-    required Function(String) onSelected2,
     required String selected1,
-    required String selected2,
   }) {
-    return Row(children: [
-        Expanded(
+    return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
@@ -161,43 +206,13 @@ class _SetupMenuState extends State<SetupMenu> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: selected1 == label2 ? Colors.green : Colors.white,
                 ),
-                child: Text(label2),
+                child: Text(label2, style: TextStyle(fontSize: 11),),
               ),
             ),
           ],
         ),
       ),
-    ),
-
-    Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => onSelected2(label1),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: selected2 == label1 ? Colors.green : Colors.white,
-                ),
-                child: Text(label1, style: TextStyle(fontSize: 11)),
-              ),
-            ),
-            SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () => onSelected2(label2),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: selected2 == label2 ? Colors.green : Colors.white,
-                ),
-                child: Text(label2),
-              ),
-            ),
-          ],
-        ),
-      ),
-    )
-    ],);
+    );
   }
 
 
@@ -213,12 +228,61 @@ class _SetupMenuState extends State<SetupMenu> {
         player2 = DartBot(player2.name, player2.rating);
     }
     
+    int startScore = int.parse(startScoreController.text);
+    int legCount = int.parse(legCountController.text);
+    int setCount = int.parse(setCountController.text);
+    bool isSetPlay = setCount > 1;
+    bool isDoubleIn = doubleIn == "Double-In";
+    bool isDoubleOut = doubleOut == "Double-Out";
     
-    MatchLogic rules = MatchLogic(int.parse(startScoreController.text), 
-               int.parse(legCountController.text), 
-               false, 0, false, false);
+
+    MatchLogic rules = MatchLogic(startScore, 
+               legCount, 
+               isSetPlay, setCount, isDoubleOut, isDoubleIn);
 
     return MatchEngine(player1, player2, rules, context);
 
   }
+
+  List<Color> getTheme(themeText) {
+    Color mainColor;
+    Color secondaryColor;
+    Color backgroundColor;
+    Color nameBoxColor;
+    Color mainBoxTextColor;
+    Color nameBoxTextColor;
+    
+    
+    if (themeText == 'WC') {
+      mainColor = const Color.fromARGB(255, 59, 120, 62); 
+      secondaryColor = const Color.fromARGB(255, 190, 190, 51);
+      backgroundColor = const Color.fromARGB(255, 30, 52, 31);
+      nameBoxColor = const Color.fromARGB(255, 220, 220, 220);
+      mainBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
+      nameBoxTextColor = const Color.fromARGB(255, 0, 0, 0);
+
+    } else if (themeText == 'Euro') {
+      mainColor = const Color.fromARGB(255, 44, 71, 158); 
+      secondaryColor = const Color.fromARGB(255,255,255,255);
+      backgroundColor = const Color.fromARGB(255, 24, 40, 92);
+      nameBoxColor = const Color.fromARGB(255, 87, 103, 158);
+      mainBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
+      nameBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
+
+    } else { // default values
+      mainColor = Colors.green; 
+      secondaryColor = Colors.white;
+      backgroundColor = const Color.fromARGB(255, 47, 83, 49);
+      nameBoxColor = const Color.fromARGB(255, 220, 220, 220);
+      mainBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
+      nameBoxTextColor = const Color.fromARGB(255, 0, 0, 0);
+    }
+
+
+    return [mainColor, secondaryColor, backgroundColor, 
+            nameBoxColor, mainBoxTextColor, nameBoxTextColor];
+  }
+
+
+
 }
