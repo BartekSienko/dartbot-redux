@@ -74,7 +74,7 @@ class _StatBoxState extends State<StatBox> {
 
   Widget boxCreate(double screenWidth, bool isLeft) {
     double statFontSize = screenWidth / 32;
-    Color textColor = matchTheme[4];
+    Color textColor = matchTheme[5];
     Color bGColor = Colors.black;
     Color themeColor = matchTheme[0];
 

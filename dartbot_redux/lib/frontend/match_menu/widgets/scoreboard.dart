@@ -62,10 +62,12 @@ void initState() {
   double numberFontSize = screenWidth / 25;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
-  Color nameTextColor = matchTheme[5];
-  Color nameBGColor = matchTheme[3];
-  Color numberTextColor = matchTheme[4];
-  Color numberBGColor = matchTheme[0];
+  Color numberBGColor = matchTheme[3];
+  Color numberTextColor = matchTheme[5];
+  Color nameBGColor = matchTheme[4];
+  Color nameTextColor = matchTheme[6];
+  
+  
 
 
   String matchDecider = "";
