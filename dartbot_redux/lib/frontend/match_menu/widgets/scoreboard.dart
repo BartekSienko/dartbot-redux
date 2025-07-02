@@ -93,19 +93,19 @@ void initState() {
           children: [
             TableRow(children: [
               buildScoreText(matchDecider, nameFontSize, topRowTextColor, topRowBGColor),
-              buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Score", nameFontSize, topRowTextColor, topRowBGColor),
             ]),
             TableRow(children: [
               buildScoreText(player1.name, nameFontSize, nameTextColor, nameBGColor),
-              buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.score.toString(), numberFontSize, numberTextColor, numberBGColor),
           ]),
             TableRow(children: [
               buildScoreText(player2.name, nameFontSize, nameTextColor, nameBGColor),
-              buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.score.toString(), numberFontSize, numberTextColor, numberBGColor),
           ]),
