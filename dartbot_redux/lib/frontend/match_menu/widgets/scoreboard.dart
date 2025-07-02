@@ -121,7 +121,7 @@ Widget buildScoreText(String text, double fontSize, Color textColor, Color backg
 
   double adjustedFontSize = fontSize;
 
-  if (text.length > 16) {
+  if ((text.length > 16 && matchEngine.matchRules.isSetPlay) || text.length > 23) {
     adjustedFontSize = adjustedFontSize * 0.75;
   }
 
