@@ -9,8 +9,13 @@ import 'package:flutter/material.dart';
 
 class MatchMenu extends StatefulWidget{
   final MatchEngine matchEngine;
+  final String matchTitle;
+  final List<Color> matchTheme;
 
-  const MatchMenu({super.key, required this.matchEngine});
+  const MatchMenu({super.key, 
+                   required this.matchEngine,
+                   required this.matchTitle,
+                   required this.matchTheme});
 
   @override
   State<MatchMenu> createState() => _MatchMenuState();
@@ -18,12 +23,15 @@ class MatchMenu extends StatefulWidget{
 
 class _MatchMenuState extends State<MatchMenu> {
   late MatchEngine matchEngine;
-
+  late String matchTitle;
+  late List<Color> matchTheme;
 
   @override
   void initState(){
     super.initState();
     matchEngine = widget.matchEngine;
+    matchTitle = widget.matchTitle;
+    matchTheme = widget.matchTheme;
     matchEngine.initMatch();
   }
   
@@ -33,13 +41,13 @@ class _MatchMenuState extends State<MatchMenu> {
   int playerOrder = 0;
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
 
   return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 50, 96, 51),
+      backgroundColor: matchTheme[2],
       appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: const Text('Dartbot Redux'),
+        backgroundColor: matchTheme[0],
+        title: Text(matchTitle, style: TextStyle(color: matchTheme[1], fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: LayoutBuilder(
@@ -54,6 +62,7 @@ Widget build(BuildContext context) {
                 left: 0,
                 right: 0,
                 child: Scoreboard(matchEngine: matchEngine,
+                                  matchTheme: matchTheme,
                                   height: screenHeight * 0.21),
               ),
               Positioned(
@@ -62,6 +71,7 @@ Widget build(BuildContext context) {
                 left: 0,
                 right: 0,
                 child: StatBox(matchEngine: matchEngine,
+                               matchTheme: matchTheme,
                                height: screenHeight * 0.2),
               ),
               Positioned(
@@ -70,6 +80,7 @@ Widget build(BuildContext context) {
                 left: 0,
                 right: 0,
                 child: NumPad(matchEngine: matchEngine,
+                              matchTheme: matchTheme,
                               height: screenHeight * 0.55),
               ),
             ],
@@ -77,7 +88,10 @@ Widget build(BuildContext context) {
         },
       ),
   );
-    
+  
+
 }
+
+  
 
 }

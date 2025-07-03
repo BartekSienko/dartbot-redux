@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 
 class Scoreboard extends StatefulWidget{
   final MatchEngine matchEngine;
+  final List<Color> matchTheme;
   final double height;
   
   const Scoreboard({
     super.key,
     required this.matchEngine,
+    required this.matchTheme,
     required this.height
   });
 
@@ -20,6 +22,7 @@ class Scoreboard extends StatefulWidget{
 
 class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
+  late List<Color> matchTheme;
   late double height;
 
 
@@ -27,6 +30,7 @@ class _ScoreboardState extends State<Scoreboard> {
 void initState() {
   super.initState();
   matchEngine = widget.matchEngine;
+  matchTheme = widget.matchTheme;
 
   // Add listener to rebuild the widget when MatchEngine notifies
     matchEngine.addListener(_onMatchEngineUpdate);  
@@ -58,10 +62,21 @@ void initState() {
   double numberFontSize = screenWidth / 25;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
-  Color nameTextColor = Colors.black;
-  Color nameBGColor = Colors.white;
-  Color numberTextColor = Colors.white;
-  Color numberBGColor = Colors.green;
+  Color numberBGColor = matchTheme[3];
+  Color numberTextColor = matchTheme[5];
+  Color nameBGColor = matchTheme[4];
+  Color nameTextColor = matchTheme[6];
+  
+  
+
+
+  String matchDecider = "";
+  if (matchEngine.matchRules.isSetPlay) {
+    matchDecider = "First to ${matchEngine.matchRules.setLimit} Sets";
+  } else {
+    matchDecider = "First to ${matchEngine.matchRules.legLimit} Legs";
+  }
+
 
   return Container(
     color: Colors.white,
@@ -77,20 +92,20 @@ void initState() {
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: [
             TableRow(children: [
-              buildScoreText("First to ${matchEngine.matchRules.legLimit} Legs", nameFontSize, topRowTextColor, topRowBGColor),
-              buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
+              buildScoreText(matchDecider, nameFontSize, topRowTextColor, topRowBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText("Sets", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Legs", nameFontSize, topRowTextColor, topRowBGColor),
               buildScoreText("Score", nameFontSize, topRowTextColor, topRowBGColor),
             ]),
             TableRow(children: [
               buildScoreText(player1.name, nameFontSize, nameTextColor, nameBGColor),
-              buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText(player1.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player1.score.toString(), numberFontSize, numberTextColor, numberBGColor),
           ]),
             TableRow(children: [
               buildScoreText(player2.name, nameFontSize, nameTextColor, nameBGColor),
-              buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
+              if (matchEngine.matchRules.isSetPlay) buildScoreText(player2.sets.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.legs.toString(), numberFontSize, numberTextColor, numberBGColor),
               buildScoreText(player2.score.toString(), numberFontSize, numberTextColor, numberBGColor),
           ]),
@@ -106,7 +121,7 @@ Widget buildScoreText(String text, double fontSize, Color textColor, Color backg
 
   double adjustedFontSize = fontSize;
 
-  if (text.length > 16) {
+  if ((text.length > 16 && matchEngine.matchRules.isSetPlay) || text.length > 23) {
     adjustedFontSize = adjustedFontSize * 0.75;
   }
 
@@ -150,42 +165,6 @@ Widget buildScoreText(String text, double fontSize, Color textColor, Color backg
       )
       );
     },
-  );
-}
-
-
-
-  Widget buildScoreText2(String text, double fontSize, Color textColor, Color backgroundColor) {
-  return Stack(
-    children: [
-      
-      Positioned.fill(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(color: backgroundColor.withAlpha(230)),
-            ),
-            Expanded(
-              child: Container(color: backgroundColor),
-            ),
-          ],
-        ),
-      ),
-
-      Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(fontSize),  // Padding inside container, not outside
-        child: Text(
-            text,
-            style: TextStyle(
-              fontSize: fontSize,
-              color: textColor,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          )
-    ],
-    
   );
 }
 

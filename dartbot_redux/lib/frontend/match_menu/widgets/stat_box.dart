@@ -7,11 +7,14 @@ import 'package:flutter/material.dart';
 
 class StatBox extends StatefulWidget{
   final MatchEngine matchEngine;
+  final List<Color> matchTheme;
   final double height;
+
   
   const StatBox({
     super.key,
     required this.matchEngine,
+    required this.matchTheme,
     required this.height
   });
 
@@ -22,6 +25,8 @@ class StatBox extends StatefulWidget{
 
 class _StatBoxState extends State<StatBox> {
   late MatchEngine matchEngine;
+  late List<Color> matchTheme;
+
   late double height;
 
 
@@ -30,6 +35,8 @@ class _StatBoxState extends State<StatBox> {
   void initState() {
     super.initState();
     matchEngine = widget.matchEngine;
+    matchTheme = widget.matchTheme;
+
 
     matchEngine.addListener(_onMatchEngineUpdate);  
 
@@ -67,9 +74,9 @@ class _StatBoxState extends State<StatBox> {
 
   Widget boxCreate(double screenWidth, bool isLeft) {
     double statFontSize = screenWidth / 32;
-    Color textColor = Colors.white;
+    Color textColor = matchTheme[5];
     Color bGColor = Colors.black;
-    Color themeColor = Colors.green;
+    Color themeColor = matchTheme[0];
 
     DartPlayer player1 = matchEngine.player1;
     DartPlayer player2 = matchEngine.player2;

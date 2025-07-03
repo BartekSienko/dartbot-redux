@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 
 class NumPad extends StatefulWidget{
   final MatchEngine matchEngine;
+  final List<Color> matchTheme;
   final double height;
 
   
   const NumPad({
     super.key,
     required this.matchEngine,
+    required this.matchTheme,
     required this.height
   });
 
@@ -22,6 +24,8 @@ class NumPad extends StatefulWidget{
 
 class _NumPadState extends State<NumPad> {
   late MatchEngine matchEngine;
+  late List<Color> matchTheme;
+
   String inputingScore = "";
 
 
@@ -29,6 +33,7 @@ class _NumPadState extends State<NumPad> {
   void initState() {
     super.initState();
     matchEngine = widget.matchEngine;
+    matchTheme = widget.matchTheme;
 
     matchEngine.addListener(_onMatchEngineUpdate);  
 
@@ -54,7 +59,7 @@ class _NumPadState extends State<NumPad> {
   double numFontSize = fontSize * 2;
   Color numPadTextColor = Colors.white;
   Color numPadBGColor = Colors.black;
-  Color themeColor = Colors.green;
+  Color themeColor = matchTheme[0];
 
 
   return SizedBox(
@@ -85,7 +90,7 @@ class _NumPadState extends State<NumPad> {
       
 
       return Container(
-    color: Colors.white,
+    color: matchTheme[1],
     child: Column( children: [ Expanded(
       child: Column(
         children: [
@@ -104,9 +109,8 @@ class _NumPadState extends State<NumPad> {
               ),
             ),
 
-          //White "TextField"
           Container(
-            color: Colors.white,
+            color: matchTheme[1],
             alignment: Alignment.centerLeft,
             padding:  EdgeInsets.all((fontSize * 0.7)),  // Padding inside container, not outside
             child: Text(
