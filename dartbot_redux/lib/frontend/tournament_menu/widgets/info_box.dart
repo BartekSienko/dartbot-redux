@@ -1,18 +1,20 @@
 // ignore_for_file: file_names
 
 
+import 'package:dartbot_redux/backend/tournaments/tournament.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 class InfoBox extends StatefulWidget{
   final MatchTheme matchTheme;
   final double height;
-
+  final Tournament tournament;
   
   const InfoBox({
     super.key,
     required this.matchTheme,
-    required this.height
+    required this.height,
+    required this.tournament
   });
 
   @override
@@ -23,12 +25,14 @@ class InfoBox extends StatefulWidget{
 class _InfoBoxState extends State<InfoBox> {
   late MatchTheme matchTheme;
   late double height;
+  late Tournament tournament;
 
   @override
   void initState() {
     super.initState();
     matchTheme = widget.matchTheme;
     height = widget.height;
+    tournament = widget.tournament;
 
   }
   
@@ -48,14 +52,14 @@ class _InfoBoxState extends State<InfoBox> {
           children: [
             TableRow(
               children: [
-              buildInfoText("Current Round: ", "1"),
-              buildInfoText("Players: ", "32")
+              buildInfoText("Current Round: ", (tournament.curRoundNr + 1).toString()),
+              buildInfoText("Players: ", (tournament.playerCount.toString()))
               ]
             ),
             TableRow(
               children: [
-              buildInfoText("Winner's Prize: ", "120.000"),
-              buildInfoText("Last Winner: ", "Gwen (3)")
+              buildInfoText("Winner's Prize: ", "${tournament.prizeMoney[0]}.000"),
+              buildInfoText("Last Winner: ", tournament.lastWinner)
               ]
             )
           ],

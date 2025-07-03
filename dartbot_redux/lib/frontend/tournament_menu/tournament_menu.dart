@@ -1,5 +1,8 @@
 // ignore_for_file: file_names
 
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/backend/tournaments/tournament.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:dartbot_redux/frontend/tournament_menu/widgets/info_box.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +20,13 @@ class TournamentMenu extends StatefulWidget{
 class _TournamentMenuState extends State<TournamentMenu> {
   MatchTheme matchTheme = MatchTheme('GrandPrix');
 
+  late Tournament tournament;
   
 
   @override
   void initState(){
     super.initState();
+    tournament = genTournament();
   }
   
 
@@ -37,6 +42,7 @@ class _TournamentMenuState extends State<TournamentMenu> {
       appBar: AppBar(
         backgroundColor: matchTheme.mainColor,
         title: Text("World Grand Prix", style: TextStyle(color: matchTheme.secondaryColor, fontWeight: FontWeight.bold)),
+        title: Text(tournament.name, style: TextStyle(color: matchTheme.secondaryColor, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: LayoutBuilder(
@@ -63,5 +69,60 @@ class _TournamentMenuState extends State<TournamentMenu> {
 }
 
   
+  //TODO: Stub function while testing on a already existing Tournament
+  Tournament genTournament(){
+  List<DartPlayer> round0 = [DartPlayer("N. Aspinall", 12),
+                             DartPlayer("R. Cross", 12),
+                             DartPlayer("S. Bunting", 13),
+                             DartPlayer("J. Clayton", 13),
+                             DartPlayer("L. Littler", 15),
+                             DartPlayer("G. Price", 14),
+                             DartPlayer("L. Humphries", 15),
+                             DartPlayer("M. van Gerwen", 14),
+                             DartPlayer("N. Aspinall", 12),
+                             DartPlayer("R. Cross", 12),
+                             DartPlayer("S. Bunting", 13),
+                             DartPlayer("J. Clayton", 13),
+                             DartPlayer("L. Littler", 15),
+                             DartPlayer("G. Price", 14),
+                             DartPlayer("L. Humphries", 15),
+                             DartPlayer("M. van Gerwen", 14),
+                             DartPlayer("N. Aspinall", 12),
+                             DartPlayer("R. Cross", 12),
+                             DartPlayer("S. Bunting", 13),
+                             DartPlayer("J. Clayton", 13),
+                             DartPlayer("L. Littler", 15),
+                             DartPlayer("G. Price", 14),
+                             DartPlayer("L. Humphries", 15),
+                             DartPlayer("M. van Gerwen", 14),
+                             DartPlayer("N. Aspinall", 12),
+                             DartPlayer("R. Cross", 12),
+                             DartPlayer("S. Bunting", 13),
+                             DartPlayer("J. Clayton", 13),
+                             DartPlayer("L. Littler", 15),
+                             DartPlayer("G. Price", 14),
+                             DartPlayer("L. Humphries", 15),
+                             DartPlayer("M. van Gerwen", 14)];
+  List<DartPlayer> round1 = [DartPlayer("N. Aspinall", 12),
+                             DartPlayer("R. Cross", 12),
+                             DartPlayer("S. Bunting", 13),
+                             DartPlayer("J. Clayton", 13)];
+  List<DartPlayer> round2 = [DartPlayer("L. Littler", 15),
+                             DartPlayer("G. Price", 14)]; 
+  List<DartPlayer> round3 = [DartPlayer("L. Humphries", 15),
+                             DartPlayer("M. van Gerwen", 14)]; 
+
+  List<List<DartPlayer>> players = [round0, round1, round2, round3];
+
+
+
+  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false);
+  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false);
+  List<MatchLogic> rulesets = [rules1, rules1, rules2];
+
+  List<int> prizeMoney = [120, 60, 40, 25, 12, 8];
+
+  return Tournament("World Grand Prix", "GrandPrix", 8, players, rulesets, prizeMoney, "M. De Decker");
+  }
 
 }

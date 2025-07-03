@@ -70,8 +70,7 @@ class MatchEngine extends ChangeNotifier{
                                                      errorString);
     
     if (!successfulThrow) {
-      /// Is going to be replaced with a pop-up
-      print("ERROR: $errorString");
+      /// TODO: Is going to be replaced with a pop-up
       return false;
     }
     
