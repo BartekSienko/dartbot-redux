@@ -1,11 +1,12 @@
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 
 class Scoreboard extends StatefulWidget{
   final MatchEngine matchEngine;
-  final List<Color> matchTheme;
+  final MatchTheme matchTheme;
   final double height;
   
   const Scoreboard({
@@ -22,7 +23,7 @@ class Scoreboard extends StatefulWidget{
 
 class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
-  late List<Color> matchTheme;
+  late MatchTheme matchTheme;
   late double height;
 
 
@@ -62,10 +63,10 @@ void initState() {
   double numberFontSize = screenWidth / 25;
   Color topRowTextColor = Colors.white;
   Color topRowBGColor = Colors.black;
-  Color numberBGColor = matchTheme[3];
-  Color numberTextColor = matchTheme[5];
-  Color nameBGColor = matchTheme[4];
-  Color nameTextColor = matchTheme[6];
+  Color numberBGColor = matchTheme.mainBoxColor;
+  Color numberTextColor = matchTheme.mainBoxTextColor;
+  Color nameBGColor = matchTheme.nameBoxColor;
+  Color nameTextColor = matchTheme.nameBoxTextColor;
   
   
 

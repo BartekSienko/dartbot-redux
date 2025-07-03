@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/num_pad.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/scoreboard.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/stat_box.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 class MatchMenu extends StatefulWidget{
   final MatchEngine matchEngine;
   final String matchTitle;
-  final List<Color> matchTheme;
+  final MatchTheme matchTheme;
 
   const MatchMenu({super.key, 
                    required this.matchEngine,
@@ -24,7 +25,7 @@ class MatchMenu extends StatefulWidget{
 class _MatchMenuState extends State<MatchMenu> {
   late MatchEngine matchEngine;
   late String matchTitle;
-  late List<Color> matchTheme;
+  late MatchTheme matchTheme;
 
   @override
   void initState(){
@@ -44,10 +45,10 @@ class _MatchMenuState extends State<MatchMenu> {
   Widget build(BuildContext context) {
 
   return Scaffold(
-      backgroundColor: matchTheme[2],
+      backgroundColor: matchTheme.backgroundColor,
       appBar: AppBar(
-        backgroundColor: matchTheme[0],
-        title: Text(matchTitle, style: TextStyle(color: matchTheme[1], fontWeight: FontWeight.bold)),
+        backgroundColor: matchTheme.mainColor,
+        title: Text(matchTitle, style: TextStyle(color: matchTheme.secondaryColor, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: LayoutBuilder(

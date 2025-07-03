@@ -3,6 +3,7 @@ import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/frontend/match_menu/match_menu.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 class SetupMenu extends StatefulWidget{
@@ -143,7 +144,7 @@ class _SetupMenuState extends State<SetupMenu> {
                     context,
                     MaterialPageRoute(
                     builder: (context) => MatchMenu(matchTitle: matchTitleController.text, 
-                                                    matchTheme: getTheme(matchThemeController.text), 
+                                                    matchTheme: MatchTheme(matchThemeController.text), 
                                                     matchEngine: matchEngine),
                     ),
                     );

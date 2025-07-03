@@ -2,11 +2,12 @@
 
 
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 class NumPad extends StatefulWidget{
   final MatchEngine matchEngine;
-  final List<Color> matchTheme;
+  final MatchTheme matchTheme;
   final double height;
 
   
@@ -24,7 +25,8 @@ class NumPad extends StatefulWidget{
 
 class _NumPadState extends State<NumPad> {
   late MatchEngine matchEngine;
-  late List<Color> matchTheme;
+  late MatchTheme matchTheme;
+  late double height;
 
   String inputingScore = "";
 
@@ -34,6 +36,7 @@ class _NumPadState extends State<NumPad> {
     super.initState();
     matchEngine = widget.matchEngine;
     matchTheme = widget.matchTheme;
+    height = widget.height;
 
     matchEngine.addListener(_onMatchEngineUpdate);  
 
@@ -59,7 +62,7 @@ class _NumPadState extends State<NumPad> {
   double numFontSize = fontSize * 2;
   Color numPadTextColor = Colors.white;
   Color numPadBGColor = Colors.black;
-  Color themeColor = matchTheme[0];
+  Color themeColor = matchTheme.mainColor;
 
 
   return SizedBox(
@@ -90,7 +93,7 @@ class _NumPadState extends State<NumPad> {
       
 
       return Container(
-    color: matchTheme[1],
+    color: matchTheme.secondaryColor,
     child: Column( children: [ Expanded(
       child: Column(
         children: [
@@ -110,7 +113,7 @@ class _NumPadState extends State<NumPad> {
             ),
 
           Container(
-            color: matchTheme[1],
+            color: matchTheme.secondaryColor,
             alignment: Alignment.centerLeft,
             padding:  EdgeInsets.all((fontSize * 0.7)),  // Padding inside container, not outside
             child: Text(
