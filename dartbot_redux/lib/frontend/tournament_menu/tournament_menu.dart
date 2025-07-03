@@ -5,6 +5,7 @@ import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/tournaments/tournament.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:dartbot_redux/frontend/tournament_menu/widgets/info_box.dart';
+import 'package:dartbot_redux/frontend/tournament_menu/widgets/match_box.dart';
 import 'package:flutter/material.dart';
 
 
@@ -19,7 +20,6 @@ class TournamentMenu extends StatefulWidget{
 
 class _TournamentMenuState extends State<TournamentMenu> {
   MatchTheme matchTheme = MatchTheme('GrandPrix');
-
   late Tournament tournament;
   
 
@@ -36,12 +36,14 @@ class _TournamentMenuState extends State<TournamentMenu> {
 
   @override
   Widget build(BuildContext context) {
+    if (tournament.rounds.isEmpty) {
+      tournament.rounds.add(tournament.generateRound());
+    }
 
   return Scaffold(
       backgroundColor: matchTheme.backgroundColor,
       appBar: AppBar(
         backgroundColor: matchTheme.mainColor,
-        title: Text("World Grand Prix", style: TextStyle(color: matchTheme.secondaryColor, fontWeight: FontWeight.bold)),
         title: Text(tournament.name, style: TextStyle(color: matchTheme.secondaryColor, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
@@ -56,7 +58,28 @@ class _TournamentMenuState extends State<TournamentMenu> {
                 height: screenHeight * 0.15, // 20% of screen height
                 left: 0,
                 right: 0,
-                child: InfoBox(matchTheme: matchTheme, 
+                child: InfoBox(matchTheme: matchTheme,
+                               tournament: tournament,  
+                               height: screenHeight * 0.15),
+              ),
+
+              Positioned(
+                top: screenHeight * 0.20,
+                height: screenHeight * 0.60, // 20% of screen height
+                left: 0,
+                right: 0,
+                child: MatchBox(matchTheme: matchTheme,
+                                tournament: tournament,  
+                                height: screenHeight * 0.60),
+              ),
+              
+              Positioned(
+                top: screenHeight * 0.85,
+                height: screenHeight * 0.15, // 20% of screen height
+                left: 0,
+                right: 0,
+                child: InfoBox(matchTheme: matchTheme,
+                               tournament: tournament,
                                height: screenHeight * 0.15),
               ),
             ],
@@ -68,7 +91,6 @@ class _TournamentMenuState extends State<TournamentMenu> {
 
 }
 
-  
   //TODO: Stub function while testing on a already existing Tournament
   Tournament genTournament(){
   List<DartPlayer> round0 = [DartPlayer("N. Aspinall", 12),
