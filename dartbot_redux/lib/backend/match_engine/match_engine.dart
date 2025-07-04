@@ -230,7 +230,6 @@ class MatchEngine extends ChangeNotifier{
 
   void showMatchStats(BuildContext? context) {
     if (context == null) return;
-
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
@@ -243,7 +242,7 @@ class MatchEngine extends ChangeNotifier{
             
             onPressed: () {
               Navigator.of(dialogContext).pop(); // close the dialog
-              Navigator.of(context).pop();       // pop the page
+              Navigator.of(context).pop(winner);       // pop the page
             },
           ),
         ],

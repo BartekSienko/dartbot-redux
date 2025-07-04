@@ -6,11 +6,14 @@ import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
 import 'package:dartbot_redux/backend/tournaments/tour_match.dart';
+import 'package:dartbot_redux/frontend/match_menu/match_menu.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 class Tournament {
   String name;
   String tag;
+  MatchTheme matchTheme;
   int playerCount;
   int remainingPlayerCount; //?
   List<List<DartPlayer>> players; // List with index for starting round
@@ -22,7 +25,7 @@ class Tournament {
   String lastWinner;
 
 
-  Tournament(this.name, this.tag, this.playerCount, this.players, this.rulesets, this.prizeMoney, this.lastWinner)
+  Tournament(this.name, this.tag, this.matchTheme, this.playerCount, this.players, this.rulesets, this.prizeMoney, this.lastWinner)
     : rounds = [],
       eliminated = [],
       remainingPlayerCount = playerCount,
@@ -40,9 +43,10 @@ class Tournament {
     return round;
   }
   
-  void playMatch(TourMatch match, String p1Status, String p2Status, BuildContext context) {
+  Future<void> playMatch(TourMatch match, String p1Status, String p2Status, BuildContext context) async {
     DartPlayer p1Playing;
     DartPlayer p2Playing;
+    int result = 0;
 
     if (p1Status == 'bot') {
       p1Playing = DartBot(match.player1.name, match.player1.rating);
@@ -59,15 +63,28 @@ class Tournament {
 
     if (p1Playing is DartBot && p2Playing is DartBot) {
       SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, false, context);
-      match.winner = matchEngine.simMatch();
-      match.player1 = p1Playing;
-      match.player2 = p2Playing;
-      match.ifPlayed = true;
+      result = matchEngine.simMatch();
+      
       
     } else {
       MatchEngine matchEngine = MatchEngine(p1Playing, p2Playing, matchRules, context);
+      result = await Navigator.push<int>(
+                      context,
+                      MaterialPageRoute(
+                      builder: (context) => MatchMenu(matchTitle: name, 
+                                                      matchTheme: matchTheme, 
+                                                      matchEngine: matchEngine),
+                      ),
+                      ) ?? 0;
     }
 
+    if (result != 0) {
+      match.winner = result;
+      match.player1 = p1Playing;
+      match.player2 = p2Playing;
+      match.ifPlayed = true;
+    }
+    
 
 
     if (allMatchesFinished()) {
@@ -137,7 +154,7 @@ void main() {
   List<int> prizeMoney = [120, 60, 40, 25, 12, 8];
 
 
-  Tournament t = Tournament("Test Cup", "PC1", 6, players, rulesets, prizeMoney, "None");
+  Tournament t = Tournament("Test Cup", "PC1", MatchTheme("def"), 6, players, rulesets, prizeMoney, "None");
 
   // ignore: avoid_print
   print(t.generateRound());

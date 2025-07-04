@@ -138,13 +138,13 @@ class _TournamentMenuState extends State<TournamentMenu> {
 
 
 
-  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false);
-  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false);
+  MatchLogic rules1 = MatchLogic(301, 6, false, 0, false, false);
+  MatchLogic rules2 = MatchLogic(301, 8, false, 0, false, false);
   List<MatchLogic> rulesets = [rules1, rules1, rules2];
 
   List<int> prizeMoney = [120, 60, 40, 25, 12, 8];
 
-  return Tournament("World Grand Prix", "GrandPrix", 8, players, rulesets, prizeMoney, "M. De Decker");
+  return Tournament("World Grand Prix", "GrandPrix", MatchTheme('GrandPrix'), 8, players, rulesets, prizeMoney, "M. De Decker");
   }
 
 }

@@ -113,14 +113,18 @@ class _MatchListState extends State<MatchList> {
           Expanded(
             flex: 15,
             child: Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 2.0),
+              padding: EdgeInsets.symmetric(horizontal: 2.0),
               child: buildButton(
                 "PLAY",
                 fontSize,
-                () => {
+                () async {
                   if (!match.ifPlayed) {
-                    tournament.playMatch(match, 'bot', 'bot', context),
-                    setState(() {})
+                    List<String>? playersStatus = await getPlayersStatus(2);
+                    if (playersStatus != null) {
+                      await tournament.playMatch(match, playersStatus[0], playersStatus[1], context);
+                      setState(() {});
+                    }
+                    
                   }
                 }
               )
@@ -219,4 +223,43 @@ class _MatchListState extends State<MatchList> {
 
   }
 
+  Future<List<String>?> getPlayersStatus(int playerCount) async {
+  return await showDialog<List<String>>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        backgroundColor: matchTheme.secondaryColor,
+        title: const Center(child: Text('Select Match Option:')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // important for sizing
+          children: [
+            buildButton(
+              "Player vs Player",
+              16,
+              () {
+                Navigator.of(dialogContext).pop(['player', 'player']);
+              },
+            ),
+            buildButton(
+              "Player vs Bot",
+              16,
+              () {
+                Navigator.of(dialogContext).pop(['player', 'bot']);
+              },
+            ),
+            buildButton(
+              "Bot vs Player",
+              16,
+              () {
+                Navigator.of(dialogContext).pop(['bot', 'player']);
+              },
+            )
+            
+          ],
+        ),
+      );
+    },
+  );
+  }
+  
 }
