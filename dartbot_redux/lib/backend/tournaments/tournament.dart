@@ -1,8 +1,12 @@
 
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
 import 'package:dartbot_redux/backend/tournaments/tour_match.dart';
+import 'package:flutter/material.dart';
 
 class Tournament {
   String name;
@@ -29,7 +33,6 @@ class Tournament {
     
     List<DartPlayer> playing = players[curRoundNr];
     List<TourMatch> round = [];
-
     int roundMatchCount = (playing.length / 2).round();
     for (int i = 0; i < roundMatchCount; i++) {
         round.add(TourMatch(playing[i], playing[playing.length - i - 1]));    }
@@ -37,6 +40,54 @@ class Tournament {
     return round;
   }
   
+  void playMatch(TourMatch match, String p1Status, String p2Status, BuildContext context) {
+    DartPlayer p1Playing;
+    DartPlayer p2Playing;
+
+    if (p1Status == 'bot') {
+      p1Playing = DartBot(match.player1.name, match.player1.rating);
+    } else {
+      p1Playing = DartPlayer(match.player1.name, match.player1.rating);
+    }
+    if (p2Status == 'bot') {
+      p2Playing = DartBot(match.player2.name, match.player2.rating);
+    } else {
+      p2Playing = DartPlayer(match.player2.name, match.player2.rating);
+    }
+
+    MatchLogic matchRules = rulesets[curRoundNr];
+
+    if (p1Playing is DartBot && p2Playing is DartBot) {
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, false, context);
+      match.winner = matchEngine.simMatch();
+      match.player1 = p1Playing;
+      match.player2 = p2Playing;
+      match.ifPlayed = true;
+      
+    } else {
+      MatchEngine matchEngine = MatchEngine(p1Playing, p2Playing, matchRules, context);
+    }
+
+
+
+    if (allMatchesFinished()) {
+      curRoundNr++;
+      rounds.add(generateRound());
+    }
+
+
+  }
+
+  bool allMatchesFinished() {
+    List<TourMatch> currentRound = rounds[curRoundNr];
+    for (int i = 0; i < currentRound.length; i++) {
+      if (!currentRound[i].ifPlayed) {
+          return false;
+      }
+    }
+    return true;
+  }
+
 
   String getRoundName() {
     List<TourMatch> curRound = rounds[curRoundNr];

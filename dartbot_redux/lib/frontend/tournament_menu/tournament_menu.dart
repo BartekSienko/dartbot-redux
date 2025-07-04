@@ -134,7 +134,7 @@ class _TournamentMenuState extends State<TournamentMenu> {
   List<DartPlayer> round3 = [DartPlayer("L. Humphries", 15),
                              DartPlayer("M. van Gerwen", 14)]; 
 
-  List<List<DartPlayer>> players = [round0, round1, round2, round3];
+  List<List<DartPlayer>> players = [round1, round2, round3];
 
 
 

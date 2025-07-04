@@ -94,26 +94,38 @@ class _MatchListState extends State<MatchList> {
           ),
           // TODO: Stub, supposed to be a button
           Expanded(
-          flex: 15,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: Text(
-              "SIM",
-              textAlign: TextAlign.right,
-            ),
+            flex: 15,
+            child: Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 2.0),
+              child: buildButton(
+                "SIM",
+                fontSize,
+                () => {
+                  if (!match.ifPlayed) {
+                    tournament.playMatch(match, 'bot', 'bot', context),
+                    setState(() {})
+                  }
+                }
+              )
+            )
           ),
-        ),
         // TODO: Stub, supposed to be a button
-        Expanded(
-          flex: 15,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-            child: Text(
-              "PLAY",
-              textAlign: TextAlign.right,
-            ),
+          Expanded(
+            flex: 15,
+            child: Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 2.0),
+              child: buildButton(
+                "PLAY",
+                fontSize,
+                () => {
+                  if (!match.ifPlayed) {
+                    tournament.playMatch(match, 'bot', 'bot', context),
+                    setState(() {})
+                  }
+                }
+              )
+            )
           ),
-        ),
         ],
       )
         
@@ -181,6 +193,30 @@ class _MatchListState extends State<MatchList> {
         ),
       )
     );
+  }
+
+
+  Widget buildButton(
+    String label,
+    double fontSize,
+    Function() onPressed
+  ) {
+    return ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: matchTheme.mainBoxColor,
+            minimumSize: Size(double.infinity, fontSize * 3), // Ensures button doesn't force a size
+            padding: EdgeInsets.zero, // Optional: tighten button space
+          ),
+          
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            
+            child: Center(
+              child: Text(label, style: TextStyle(fontSize: fontSize, color: matchTheme.mainBoxTextColor),))
+            )
+        );
+
   }
 
 }
