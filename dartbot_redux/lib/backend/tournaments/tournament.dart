@@ -1,5 +1,7 @@
 
 
+import 'dart:math';
+
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
@@ -135,9 +137,12 @@ class Tournament {
     }
 
     if (match.winner == 1) {
+      adjustPlayerRatings(player1, player2);
       players[curRoundNr + 1].add(player1);
       eliminated[curRoundNr].add(player2);
+      
     } else {
+      adjustPlayerRatings(player2, player1);
       players[curRoundNr + 1].add(player2);
       eliminated[curRoundNr].add(player1);
     }
@@ -154,6 +159,27 @@ class Tournament {
 
 
     throw Exception();
+  }
+  
+  void adjustPlayerRatings(DartPlayer winner, DartPlayer loser) {
+    double ratingDiff = winner.rating - loser.rating;
+    double winnerUpgrade = 0.0001 * pow(ratingDiff, 3) 
+                           + 0.002 * pow(ratingDiff,2)
+                           + 0.02 * ratingDiff + 0.09;
+    print("Before Ratings:\n${winner.rating} vs ${loser.rating}");
+    //Will be positive
+    if (winnerUpgrade < 0) winnerUpgrade = 0;
+
+    //Will be negative
+    double loserDowngrade = 0.00004 * pow(ratingDiff,3)
+                            - 0.0026 * pow(ratingDiff,2)
+                            + 0.037 * ratingDiff - 0.16;
+
+    if (loserDowngrade > 0) loserDowngrade = 0;
+
+    winner.rating += winnerUpgrade / 2;
+    loser.rating += loserDowngrade;
+    print("After Ratings:\n${winner.rating} vs ${loser.rating}");
   }
 
   String getRoundName() {
