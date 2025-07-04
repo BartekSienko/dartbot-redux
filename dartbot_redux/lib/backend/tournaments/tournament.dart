@@ -15,7 +15,6 @@ class Tournament {
   String tag;
   MatchTheme matchTheme;
   int playerCount;
-  int remainingPlayerCount; //?
   List<List<DartPlayer>> players; // List with index for starting round
   List<List<TourMatch>> rounds;
   List<List<DartPlayer>> eliminated; // List with index for eliminated round
@@ -28,12 +27,10 @@ class Tournament {
   Tournament(this.name, this.tag, this.matchTheme, this.playerCount, this.players, this.rulesets, this.prizeMoney, this.lastWinner)
     : rounds = [],
       eliminated = [],
-      remainingPlayerCount = playerCount,
       curRoundNr = 0;
 
 
   List<TourMatch> generateRound() {
-    
     List<DartPlayer> playing = players[curRoundNr];
     List<TourMatch> round = [];
     int roundMatchCount = (playing.length / 2).round();
@@ -84,14 +81,9 @@ class Tournament {
     if (result != 0) {
       match.winner = result;
       match.ifPlayed = true;
+      movePlayersToNextRound(match);
     }
     
-
-
-    if (allMatchesFinished()) {
-      curRoundNr++;
-      rounds.add(generateRound());
-    }
 
 
   }
@@ -114,7 +106,7 @@ class Tournament {
     for (int matchNr = 0; matchNr < currentRound.length; matchNr++) {
       TourMatch currentMatch = currentRound[matchNr];
       if (currentMatch.ifPlayed) continue;
-      
+
       DartPlayer p1Playing = DartBot(currentMatch.player1.name, currentMatch.player1.rating);
       DartPlayer p2Playing = DartBot(currentMatch.player2.name, currentMatch.player2.rating);
 
@@ -126,26 +118,70 @@ class Tournament {
       currentMatch.player2 = p2Playing;
       currentMatch.winner = result;
       currentMatch.ifPlayed = true;
+      movePlayersToNextRound(currentMatch);
     }
   }
 
 
+  void movePlayersToNextRound(TourMatch match) {
+    DartPlayer player1 = findPlayerInList(match.player1);
+    DartPlayer player2 = findPlayerInList(match.player2);
+
+    if (players.length == (curRoundNr + 1)) {
+      players.add([]);
+    }
+    if (eliminated.length == (curRoundNr)) {
+      eliminated.add([]);
+    }
+
+    if (match.winner == 1) {
+      players[curRoundNr + 1].add(player1);
+      eliminated[curRoundNr].add(player2);
+    } else {
+      players[curRoundNr + 1].add(player2);
+      eliminated[curRoundNr].add(player1);
+    }
+  }
+
+  DartPlayer findPlayerInList(DartPlayer copiedPlayer) {
+    List<DartPlayer> playing = players[curRoundNr];
+
+    for (int i = 0; i < playing.length; i++) {
+      if (copiedPlayer.name == playing[i].name) {
+        return playing[i];
+      }
+    }
+
+
+    throw Exception();
+  }
 
   String getRoundName() {
     List<TourMatch> curRound = rounds[curRoundNr];
+    List<DartPlayer> curRoundPlayers = players[curRoundNr];
 
-    if (remainingPlayerCount == 2 && curRound.length == 1) {
+    int matchCount = curRound.length;
+    int playerCount = curRoundPlayers.length;
+    
+
+    if (playerCount == 2 && matchCount == 1 &&
+        rulesets.length == (curRoundNr + 1)) {
       return "Final";
-    } else if (remainingPlayerCount == 4 && curRound.length == 2) {
+    } else if (playerCount == 4 && matchCount == 2 &&
+        rulesets.length == (curRoundNr + 2)) {
       return "Semi-Final";
-    } else if (remainingPlayerCount == 8 && curRound.length == 4) {
+    } else if (playerCount == 8 && matchCount == 4 &&
+        rulesets.length == (curRoundNr + 3)) {
       return "Quarter-Final";
     } else {
       return "Round ${curRoundNr + 1}";
     }
   }
 
-  
+  bool isFinished() {
+    return (players[curRoundNr].length == 1 &&
+            rulesets.length == curRoundNr);
+    }
 
 }
 

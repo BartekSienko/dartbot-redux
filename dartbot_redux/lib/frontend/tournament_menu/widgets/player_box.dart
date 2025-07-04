@@ -153,9 +153,14 @@ class _PlayerBoxState extends State<PlayerBox> {
                     () {
                       if (tournament.allMatchesFinished()) {
                         tournament.curRoundNr++;
-                        tournament.rounds.add(tournament.generateRound());
-                        onReload();
-                        setState(() {});
+                        if (tournament.isFinished()) {
+                          displayTournamentResults(context, fontSize);
+                        } else {
+                          tournament.rounds.add(tournament.generateRound());
+                          onReload();
+                          setState(() {});
+                        };
+                        
                       } else {
                         showDialog(
                           context: context,
@@ -291,7 +296,83 @@ class _PlayerBoxState extends State<PlayerBox> {
   );
   }
   
+  void displayTournamentResults(BuildContext context, double fontSize){
+    showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        title: Center(child: Text('Match Stats')),
+        content: generateTournamentResults(fontSize),
+        actions: [
+          TextButton(
+            child: Text('Close'),
+            
+            onPressed: () {
+              Navigator.of(dialogContext).pop(); // close the dialog
+              Navigator.of(context).pop();       // pop the page
+            },
+          ),
+        ],
+      );
+    },
+  );
+  }
 
+  Widget generateTournamentResults(double fontSize) {
+  int roundCount = tournament.eliminated.length;
+
+  List<String> roundNames = [];
+  for (int i = 0; i < (roundCount - 3); i++) {
+    roundNames.add("----- Round #$i -----");
+  }
+  roundNames.add("----- Quarter-Final -----");
+  roundNames.add("----- Semi-Final -----");
+  roundNames.add("----- Runner-Up -----");
+
+  return SizedBox(
+    height: 300, // or MediaQuery.of(context).size.height * 0.5
+    width: 300,  // optional, based on layout
+    child: ListView(
+      shrinkWrap: true,
+      children: [
+      Text(
+        "----- Winner ----",
+        style: TextStyle(
+            color: matchTheme.backgroundColor,
+            fontWeight: FontWeight.bold,
+            fontSize: fontSize,
+          ),
+      ),
+      Text(
+        tournament.players.last[0].name,
+              style: TextStyle(
+                color: matchTheme.backgroundColor,
+                fontSize: fontSize,
+              ),
+      ),
+
+      // All eliminated players
+      for (int roundNr = roundCount - 1; roundNr >= 0; roundNr--) ...[
+        Text(
+          roundNames[roundNr],
+          style: TextStyle(
+            color: matchTheme.backgroundColor,
+            fontWeight: FontWeight.bold,
+            fontSize: fontSize,
+          ),
+        ),
+        ...tournament.eliminated[roundNr].map((player) => Text(
+              player.name,
+              style: TextStyle(
+                color: matchTheme.backgroundColor,
+                fontSize: fontSize,
+              ),
+            )),
+        ],
+      ],
+    )
+  );
+}
 
 
 }
