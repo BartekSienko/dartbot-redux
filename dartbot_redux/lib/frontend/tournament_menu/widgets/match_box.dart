@@ -10,13 +10,15 @@ class MatchBox extends StatefulWidget{
   final MatchTheme matchTheme;
   final double height;
   final Tournament tournament;
+  final VoidCallback onReload;
 
   
   const MatchBox({
     super.key,
     required this.matchTheme,
     required this.height,
-    required this.tournament
+    required this.tournament,
+    required this.onReload
   });
 
   @override
@@ -28,6 +30,7 @@ class _MatchBoxState extends State<MatchBox> {
   late MatchTheme matchTheme;
   late Tournament tournament;
   late double height;
+  late VoidCallback onReload;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _MatchBoxState extends State<MatchBox> {
     matchTheme = widget.matchTheme;
     tournament = widget.tournament;
     height = widget.height;
+    onReload = widget.onReload;
 
   }
   
@@ -62,7 +66,8 @@ class _MatchBoxState extends State<MatchBox> {
               height: height * 0.86,
               child: MatchList(matchTheme: matchTheme,
                                height: height,
-                               tournament: tournament)
+                               tournament: tournament,
+                               onReload: onReload)
               ),
               SizedBox( 
               height: height * 0.04,

@@ -78,10 +78,11 @@ class Tournament {
                       ) ?? 0;
     }
 
+    match.player1 = p1Playing;
+    match.player2 = p2Playing;
+
     if (result != 0) {
       match.winner = result;
-      match.player1 = p1Playing;
-      match.player2 = p2Playing;
       match.ifPlayed = true;
     }
     
@@ -104,6 +105,30 @@ class Tournament {
     }
     return true;
   }
+
+
+  void simRound(BuildContext context) {
+    List<TourMatch> currentRound = rounds[curRoundNr];
+    MatchLogic matchRules = rulesets[curRoundNr];
+
+    for (int matchNr = 0; matchNr < currentRound.length; matchNr++) {
+      TourMatch currentMatch = currentRound[matchNr];
+      if (currentMatch.ifPlayed) continue;
+      
+      DartPlayer p1Playing = DartBot(currentMatch.player1.name, currentMatch.player1.rating);
+      DartPlayer p2Playing = DartBot(currentMatch.player2.name, currentMatch.player2.rating);
+
+
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, true, context);
+      int result = matchEngine.simMatch();
+      
+      currentMatch.player1 = p1Playing;
+      currentMatch.player2 = p2Playing;
+      currentMatch.winner = result;
+      currentMatch.ifPlayed = true;
+    }
+  }
+
 
 
   String getRoundName() {

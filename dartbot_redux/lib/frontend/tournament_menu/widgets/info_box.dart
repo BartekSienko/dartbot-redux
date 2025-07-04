@@ -59,7 +59,7 @@ class _InfoBoxState extends State<InfoBox> {
             TableRow(
               children: [
               buildInfoText("Winner's Prize: ", "${tournament.prizeMoney[0]}.000"),
-              buildInfoText("Last Winner: ", tournament.lastWinner)
+              buildInfoText("Last Winner:\n", tournament.lastWinner)
               ]
             )
           ],

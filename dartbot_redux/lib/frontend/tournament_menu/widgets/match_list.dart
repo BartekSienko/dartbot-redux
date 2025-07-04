@@ -12,6 +12,7 @@ class MatchList extends StatefulWidget{
   final MatchTheme matchTheme;
   final double height;
   final Tournament tournament;
+  final VoidCallback onReload;
 
 
   
@@ -20,6 +21,7 @@ class MatchList extends StatefulWidget{
     required this.matchTheme,
     required this.tournament,
     required this.height,
+    required this.onReload
     
   });
 
@@ -32,6 +34,7 @@ class _MatchListState extends State<MatchList> {
   late MatchTheme matchTheme;
   late double height;
   late Tournament tournament;
+  late VoidCallback onReload;
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _MatchListState extends State<MatchList> {
     matchTheme = widget.matchTheme;
     height = widget.height;
     tournament = widget.tournament;
+    onReload = widget.onReload;
 
   }
   
@@ -103,6 +107,7 @@ class _MatchListState extends State<MatchList> {
                 () => {
                   if (!match.ifPlayed) {
                     tournament.playMatch(match, 'bot', 'bot', context),
+                    onReload(),
                     setState(() {})
                   }
                 }
@@ -121,7 +126,9 @@ class _MatchListState extends State<MatchList> {
                   if (!match.ifPlayed) {
                     List<String>? playersStatus = await getPlayersStatus(2);
                     if (playersStatus != null) {
+                      // ignore: use_build_context_synchronously
                       await tournament.playMatch(match, playersStatus[0], playersStatus[1], context);
+                      onReload();
                       setState(() {});
                     }
                     
@@ -240,6 +247,7 @@ class _MatchListState extends State<MatchList> {
                 Navigator.of(dialogContext).pop(['player', 'player']);
               },
             ),
+            SizedBox(height: height / 150, child: Container(color: matchTheme.secondaryColor),),
             buildButton(
               "Player vs Bot",
               16,
@@ -247,6 +255,7 @@ class _MatchListState extends State<MatchList> {
                 Navigator.of(dialogContext).pop(['player', 'bot']);
               },
             ),
+            SizedBox(height: height / 150, child: Container(color: matchTheme.secondaryColor),),
             buildButton(
               "Bot vs Player",
               16,

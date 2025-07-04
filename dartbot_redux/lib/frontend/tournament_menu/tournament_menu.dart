@@ -6,6 +6,7 @@ import 'package:dartbot_redux/backend/tournaments/tournament.dart';
 import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:dartbot_redux/frontend/tournament_menu/widgets/info_box.dart';
 import 'package:dartbot_redux/frontend/tournament_menu/widgets/match_box.dart';
+import 'package:dartbot_redux/frontend/tournament_menu/widgets/player_box.dart';
 import 'package:flutter/material.dart';
 
 
@@ -70,7 +71,10 @@ class _TournamentMenuState extends State<TournamentMenu> {
                 right: 0,
                 child: MatchBox(matchTheme: matchTheme,
                                 tournament: tournament,  
-                                height: screenHeight * 0.60),
+                                height: screenHeight * 0.60,
+                                onReload: () {
+                                  setState(() {});
+                                }),
               ),
               
               Positioned(
@@ -78,9 +82,12 @@ class _TournamentMenuState extends State<TournamentMenu> {
                 height: screenHeight * 0.15, // 20% of screen height
                 left: 0,
                 right: 0,
-                child: InfoBox(matchTheme: matchTheme,
-                               tournament: tournament,
-                               height: screenHeight * 0.15),
+                child: PlayerBox(matchTheme: matchTheme,
+                                tournament: tournament,
+                                height: screenHeight * 0.15,
+                                onReload: () {
+                                  setState(() {});
+                                }),
               ),
             ],
           );
