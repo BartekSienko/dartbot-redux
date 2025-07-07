@@ -60,7 +60,7 @@ class MatchEngine extends ChangeNotifier{
 
 
 
-  bool visitThrow(int pointsScored) {
+  Future<bool> visitThrow(int pointsScored, BuildContext context) async {
     DartPlayer playerThrowing;
     if (throwing == 1) {
       playerThrowing = player1;
@@ -75,15 +75,38 @@ class MatchEngine extends ChangeNotifier{
                                                      errorString);
     
     if (!successfulThrow) {
-      /// TODO: Is going to be replaced with a pop-up
+      showDialog(
+        context: context,
+        builder: (BuildContext dialogContext) {
+          return AlertDialog(
+            title: Center(child: Text("Illegal Score inputed!\nIf it's a bust, input '0'")),
+            actions: [
+              TextButton(
+                child: Text('Close'),
+                
+                onPressed: () {
+                  Navigator.of(dialogContext).pop(); // close the dialog    
+                },
+              ),
+            ],
+          );
+        },
+      );
       return false;
     }
     
     /// TODO: ADD POP-UP FOR DOUBLES AND DARTS AT CHECKOUT
-    
-    
+    Set<int> possibleDartsAtDouble = playerThrowing.getPossibleDartsAtDouble(pointsScored);
+    Set<int> possibleDartsAtCheckout = playerThrowing.getPossibleDartsForCheckout(pointsScored);
+
+    List<int> dartsAtFinishing = await getDartsAtFinishing(possibleDartsAtDouble, possibleDartsAtCheckout, context); 
+
+    int dartsAtDouble = dartsAtFinishing[0];
+    int dartsAtCheckout = dartsAtFinishing[1];
+  
+    playerThrowing.stats.doublesAttempted += dartsAtDouble;
     playerThrowing.score -= pointsScored;
-    playerThrowing.dartThrow(pointsScored, matchRules.doubleOut, 3);
+    playerThrowing.dartThrow(pointsScored, matchRules.doubleOut, dartsAtCheckout);
 
     // Hands the "turn" to the next player
     if (throwing == 1) {
@@ -255,5 +278,88 @@ class MatchEngine extends ChangeNotifier{
 
   
 }
+
+  Future<List<int>> getDartsAtFinishing(Set<int> possibleDoubles, 
+                                        Set<int> possibleCheckouts, 
+                                        BuildContext context) async {
+    
+    int dartsAtDouble = possibleDoubles.first;
+    int dartsAtCheckout = possibleCheckouts.first;
+    
+    bool checkForDoubles = possibleDoubles.length > 1;
+    bool checkForCheckouts = possibleCheckouts.length > 1;
+    
+    if (!checkForDoubles && !checkForCheckouts) {
+      return [dartsAtDouble, dartsAtCheckout];
+    }
+  
+  return await showDialog<List<int>>(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return StatefulBuilder(
+        builder: (BuildContext context, void Function(void Function()) setState) {
+          return PopScope(
+            canPop: false,
+            child: AlertDialog(
+              title: Column(
+                children: [
+                  if (checkForDoubles) Text("How many darts at double?"),
+                  if (checkForDoubles)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: possibleDoubles.map((option) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              dartsAtDouble = option;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                dartsAtDouble == option ? Colors.black : Colors.grey,
+                          ),
+                          child: Text(option.toString(), style: TextStyle(color: Colors.white),),
+                        );
+                      }).toList(),
+                    ),
+                
+                  if (checkForCheckouts) Text("How many darts at checkout?"),
+                  if (checkForCheckouts)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: possibleCheckouts.map((option) {
+                        return ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              dartsAtCheckout = option;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                dartsAtCheckout == option ? Colors.black : Colors.grey,
+                          ),
+                          child: Text(option.toString(), style: TextStyle(color: Colors.white)),
+                        );
+                      }).toList(),
+                    )         
+                ],
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Close', style: TextStyle(color: Colors.black)),
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop([dartsAtDouble, dartsAtCheckout]);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    },
+  ) ?? [dartsAtDouble, dartsAtCheckout];  
+  }
+
 
 }

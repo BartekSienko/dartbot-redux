@@ -228,7 +228,7 @@ void handleButtonPress(String number) {
     inputingScore += number; // update the state variable
     });
   } else if (number == ">") {
-    matchEngine.visitThrow(int.tryParse(inputingScore)!);
+    matchEngine.visitThrow(int.tryParse(inputingScore)!, context);
     inputingScore = "";
   } else if (number == "C") {
     setState(() {
