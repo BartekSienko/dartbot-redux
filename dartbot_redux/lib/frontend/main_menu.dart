@@ -3,6 +3,7 @@
 
 
 import 'package:dartbot_redux/frontend/match_menu/setup_menu.dart';
+import 'package:dartbot_redux/frontend/tournament_menu/tournament_menu.dart';
 import 'package:flutter/material.dart';
 
 class MainMenu extends StatefulWidget{
@@ -31,7 +32,7 @@ class _MainMenuState extends State<MainMenu> {
             Expanded(flex: 2, child: Container()),
             Expanded(flex: 20, child: createMenuButton("Quick Match", "Play a quick local match", fontSize, SetupMenu())),
             Expanded(flex: 2, child: Container()),
-            Expanded(flex: 20, child: createMenuButton("Tournament", "NOT YET IMPLEMENTED!\nCreate a tournament to play", fontSize, SetupMenu())),
+            Expanded(flex: 20, child: createMenuButton("Tournament", "NOT YET IMPLEMENTED!\nCreate a tournament to play", fontSize, TournamentMenu())),
             Expanded(flex: 2, child: Container()),
             Expanded(flex: 20, child: createMenuButton("Career Mode", "NOT YET IMPLEMENTED!\nPlay out a custom career mode", fontSize, SetupMenu())),
             Expanded(flex: 2, child: Container()),

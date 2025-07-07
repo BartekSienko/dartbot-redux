@@ -2,7 +2,9 @@ import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
 import 'package:dartbot_redux/frontend/match_menu/match_menu.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 class SetupMenu extends StatefulWidget{
@@ -139,14 +141,19 @@ class _SetupMenuState extends State<SetupMenu> {
               ElevatedButton(
                 onPressed: () {
                     MatchEngine matchEngine = createMatch();
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                    builder: (context) => MatchMenu(matchTitle: matchTitleController.text, 
-                                                    matchTheme: getTheme(matchThemeController.text), 
-                                                    matchEngine: matchEngine),
-                    ),
-                    );
+                    
+                    if (matchEngine is SimMatchEngine) {
+                      matchEngine.simMatch();
+                    } else {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                      builder: (context) => MatchMenu(matchTitle: matchTitleController.text, 
+                                                      matchTheme: MatchTheme(matchThemeController.text), 
+                                                      matchEngine: matchEngine),
+                      ),
+                      );
+                    }
                 },
                 child: Text('Start Match'),
               ),
@@ -240,7 +247,16 @@ class _SetupMenuState extends State<SetupMenu> {
                legCount, 
                isSetPlay, setCount, isDoubleOut, isDoubleIn);
 
-    return MatchEngine(player1, player2, rules, context);
+
+    MatchEngine matchEngine;
+
+    if (player1 is DartBot && player2 is DartBot) {
+      matchEngine = SimMatchEngine(player1, player2, rules, false, context);      
+    } else {
+      matchEngine = MatchEngine(player1, player2, rules, context);
+    }
+
+    return matchEngine;
 
   }
 

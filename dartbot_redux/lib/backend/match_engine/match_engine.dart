@@ -6,22 +6,27 @@ import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 import 'package:flutter/material.dart';
 
 class MatchEngine extends ChangeNotifier{
-  BuildContext context;
+  BuildContext? context;
   DartPlayer player1;
   DartPlayer player2;
   final MatchLogic matchRules;
   int throwing = 1;
   int onThrow = 1;
   int onThrowSet = 1;
+  bool matchFinished;
+  int winner;
 
 
-  MatchEngine(this.player1, this.player2, this.matchRules, this.context);
+  MatchEngine(this.player1, this.player2, this.matchRules, [this.context]): matchFinished = false, winner = 0;
+
+
 
   void initMatch() {
     newLeg();
     onThrow = 1;
     onThrowSet = 1;
     throwing = 1;
+    
     if (player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
       p1.visitThrow(0, matchRules.doubleOut, 
@@ -70,8 +75,7 @@ class MatchEngine extends ChangeNotifier{
                                                      errorString);
     
     if (!successfulThrow) {
-      /// Is going to be replaced with a pop-up
-      print("ERROR: $errorString");
+      /// TODO: Is going to be replaced with a pop-up
       return false;
     }
     
@@ -135,13 +139,13 @@ class MatchEngine extends ChangeNotifier{
       player1.legs++;
       player2.score = 0;
       checkForNewBestWorst(player1);
-      checkForMatchWinner(player1);
+      checkForMatchWinner(player1, 1);
       newLeg();
     } else if (player2.score <= 0) {
       player2.legs++;
       player1.score = 0;
       checkForNewBestWorst(player2);
-      checkForMatchWinner(player2);
+      checkForMatchWinner(player2, 2);
       newLeg();
     }
 
@@ -168,24 +172,28 @@ class MatchEngine extends ChangeNotifier{
             player1.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player1);
+            checkForMatchWinner(player1, 1);
             newLeg();
         } else if (player2.legs >= matchRules.getLegLimit()) {
             player2.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player2);
+            checkForMatchWinner(player2, 2);
             newLeg();
         }
   }
 
-  void checkForMatchWinner(DartPlayer player) {
+  void checkForMatchWinner(DartPlayer player, int nr) {
     if (matchRules.isSetPlay) {
       if (player.sets >= matchRules.setLimit) {
+        winner = nr;
+        matchFinished = true;
         showMatchStats(context);
       }
     } else {
       if (player.legs >= matchRules.legLimit) {
+       winner = nr;
+       matchFinished = true;
        showMatchStats(context);
       }
     }
@@ -220,8 +228,8 @@ class MatchEngine extends ChangeNotifier{
   }
 
 
-  void showMatchStats(BuildContext context) {
-
+  void showMatchStats(BuildContext? context) {
+    if (context == null) return;
   showDialog(
     context: context,
     builder: (BuildContext dialogContext) {
@@ -234,7 +242,7 @@ class MatchEngine extends ChangeNotifier{
             
             onPressed: () {
               Navigator.of(dialogContext).pop(); // close the dialog
-              Navigator.of(context).pop();       // pop the page
+              Navigator.of(context).pop(winner);       // pop the page
             },
           ),
         ],

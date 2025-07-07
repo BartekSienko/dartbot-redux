@@ -2,12 +2,13 @@
 import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:flutter/material.dart';
 
 
 class StatBox extends StatefulWidget{
   final MatchEngine matchEngine;
-  final List<Color> matchTheme;
+  final MatchTheme matchTheme;
   final double height;
 
   
@@ -25,7 +26,7 @@ class StatBox extends StatefulWidget{
 
 class _StatBoxState extends State<StatBox> {
   late MatchEngine matchEngine;
-  late List<Color> matchTheme;
+  late MatchTheme matchTheme;
 
   late double height;
 
@@ -74,9 +75,9 @@ class _StatBoxState extends State<StatBox> {
 
   Widget boxCreate(double screenWidth, bool isLeft) {
     double statFontSize = screenWidth / 32;
-    Color textColor = matchTheme[5];
+    Color textColor = matchTheme.mainBoxTextColor;
     Color bGColor = Colors.black;
-    Color themeColor = matchTheme[0];
+    Color themeColor = matchTheme.mainColor;
 
     DartPlayer player1 = matchEngine.player1;
     DartPlayer player2 = matchEngine.player2;
