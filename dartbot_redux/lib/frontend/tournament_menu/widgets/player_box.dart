@@ -75,7 +75,7 @@ class _PlayerBoxState extends State<PlayerBox> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double fontSize = screenWidth / 25;
+    double fontSize = screenWidth / 28;
 
     TourMatch focusMatch = getFocusMatch();
 
@@ -154,6 +154,7 @@ class _PlayerBoxState extends State<PlayerBox> {
                       if (tournament.allMatchesFinished()) {
                         tournament.curRoundNr++;
                         if (tournament.isFinished()) {
+                          Navigator.of(context).pop();       // pop the page
                           displayTournamentResults(context, fontSize);
                         } else {
                           tournament.rounds.add(tournament.generateRound());
@@ -180,7 +181,6 @@ class _PlayerBoxState extends State<PlayerBox> {
                           },
                         );
                       }
-                        
                     }
                   )
                 )
@@ -309,7 +309,6 @@ class _PlayerBoxState extends State<PlayerBox> {
             
             onPressed: () {
               Navigator.of(dialogContext).pop(); // close the dialog
-              Navigator.of(context).pop();       // pop the page
             },
           ),
         ],
@@ -323,7 +322,7 @@ class _PlayerBoxState extends State<PlayerBox> {
 
   List<String> roundNames = [];
   for (int i = 0; i < (roundCount - 3); i++) {
-    roundNames.add("----- Round #$i -----");
+    roundNames.add("----- Round #${ i + 1 } -----");
   }
   roundNames.add("----- Quarter-Final -----");
   roundNames.add("----- Semi-Final -----");
