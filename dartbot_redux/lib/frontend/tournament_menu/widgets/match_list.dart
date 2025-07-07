@@ -96,7 +96,6 @@ class _MatchListState extends State<MatchList> {
               ],
             )
           ),
-          // TODO: Stub, supposed to be a button
           Expanded(
             flex: 15,
             child: Padding(
@@ -114,7 +113,6 @@ class _MatchListState extends State<MatchList> {
               )
             )
           ),
-        // TODO: Stub, supposed to be a button
           Expanded(
             flex: 15,
             child: Padding(
