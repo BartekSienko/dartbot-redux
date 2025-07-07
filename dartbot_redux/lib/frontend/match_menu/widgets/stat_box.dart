@@ -64,9 +64,9 @@ class _StatBoxState extends State<StatBox> {
     height: widget.height,
     child: Row(
       children: [
-        Expanded(flex: 45, child: boxCreate(screenWidth, true)),
-        Expanded(flex: 10, child: Container()),
-        Expanded(flex: 45, child: boxCreate(screenWidth, false)),
+        Expanded(flex: 40, child: boxCreate(screenWidth, true)),
+        Expanded(flex: 20, child: buildStatAndSimButtons(screenWidth)),
+        Expanded(flex: 40, child: boxCreate(screenWidth, false)),
       ],
     )
     );
@@ -158,11 +158,11 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
   Color leftColor = backgroundColor;
   Color rightColor = backgroundColor.withAlpha(230);
   if (isLeft) {
-    leftText = "3 Dart Avr.\n" "Last Score\n" "Darts Thrown\n" "Checkout Rate";
+    leftText = "3 Dart Avr.\n" "Last Score\n" "Darts Thrown\n" "Checkouts";
     rightText = "${stats[0]}\n" "${stats[1]}\n" "${stats[2]}\n" "${stats[3]}";
   } else {
    leftText  = "${stats[0]}\n" "${stats[1]}\n" "${stats[2]}\n" "${stats[3]}";
-   rightText = "3 Dart Avr.\n" "Last Score\n" "Darts Thrown\n" "Checkout Rate";
+   rightText = "3 Dart Avr.\n" "Last Score\n" "Darts Thrown\n" "Checkouts";
    leftFlex--;
    rightFlex++;
    leftColor = rightColor;
@@ -208,5 +208,65 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
     ],
   );
 }
+
+  Widget buildStatAndSimButtons(double screenWidth) {
+    double fontSize = screenWidth / 32;
+
+    return Column(
+      children: [  
+        // Stat Button
+        Expanded(
+          flex: 50, 
+          child: Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 8.0,
+                                                  vertical: 12.0),
+            child: buildButton("Match\n Stats",
+                              fontSize,
+                              () {
+                                matchEngine.showMatchStats(context);
+                              })                             
+          ),
+        ),
+        // TODO: Implement Sim Button
+        Expanded(
+          flex: 50, 
+          child: Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 8.0,
+                                                  vertical: 12.0),
+            child: buildButton("Sim\nLeg",
+                              fontSize,
+                              () {
+
+                              })                             
+          ),
+        ),
+      ]
+    );
+  }
+
+
+  Widget buildButton(
+    String label,
+    double fontSize,
+    Function() onPressed
+  ) {
+    return ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: matchTheme.mainBoxColor,
+            minimumSize: Size(double.infinity, fontSize * 3), // Ensures button doesn't force a size
+            padding: EdgeInsets.all(6.0), // Optional: tighten button space
+          ),
+          
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            
+            child: Center(
+              child: Text(label, style: TextStyle(fontSize: fontSize, color: matchTheme.mainBoxTextColor),))
+            )
+        );
+
+  }
+
 
 }

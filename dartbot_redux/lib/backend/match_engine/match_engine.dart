@@ -242,7 +242,10 @@ class MatchEngine extends ChangeNotifier{
             
             onPressed: () {
               Navigator.of(dialogContext).pop(); // close the dialog
-              Navigator.of(context).pop(winner);       // pop the page
+              if (matchFinished) {
+                Navigator.of(context).pop(winner); // pop the page
+              }
+                     
             },
           ),
         ],
