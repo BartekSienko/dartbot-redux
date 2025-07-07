@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
@@ -243,6 +245,5 @@ void main() {
 
   Tournament t = Tournament("Test Cup", "PC1", MatchTheme("def"), 6, players, rulesets, prizeMoney, "None");
 
-  // ignore: avoid_print
   print(t.generateRound());
   }

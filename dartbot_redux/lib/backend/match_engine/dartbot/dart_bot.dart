@@ -1,11 +1,13 @@
-// ignore_for_file: unnecessary_this, file_names, avoid_print
+// ignore_for_file: unnecessary_this, file_names, avoid_print, use_build_context_synchronously
 
 
+import 'dart:async';
 import 'dart:math';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/dartbot/distribution_table.dart';
 import 'package:dartbot_redux/backend/match_engine/dartbot/throw_target.dart';
+import 'package:flutter/material.dart';
 
 
 class DartBot extends DartPlayer {
@@ -176,7 +178,7 @@ class DartBot extends DartPlayer {
         int scoreBeforeVisit = this.score;
         this.scoreThisVisit = 0;
         while (dartsInHand > 0) {
-            int currentThrow = oneDartThrow(isDoubleIn, isDoubleOut);
+            int currentThrow = oneDartThrow(isDoubleIn, isDoubleOut).score;
             this.scoreThisVisit += currentThrow;
             this.score -= currentThrow;
             this.dartsInHand--;
@@ -199,8 +201,100 @@ class DartBot extends DartPlayer {
 
     }
 
+  Future<bool> visualVisitThrow(bool isDoubleIn, bool isDoubleOut, BuildContext context, {VoidCallback? onComplete}) async {
+    dartsInHand = 3;
+    int dartsThrownVisit = 0;
+    int scoreBeforeVisit = score;
+    scoreThisVisit = 0;
+    List<int> scoresThisVisit = [0, 0, 0]; // 3 darts per visit
+    List<String> targetsThisVisit = ["-", "-", "-"];
 
-    int oneDartThrow(bool isDoubleIn, bool isDoubleOut) {
+    bool hasRun = false;
+    // Show the dialog
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            // 🧠 Declare async logic inside builder (but don't run yet)
+            Future<void> runThrows() async {
+              while (dartsInHand > 0 && dartsThrownVisit < 3) {
+                await Future.delayed(const Duration(seconds: 1)); // simulate delay between throws
+
+                ({int score, ThrowTarget target}) throwResult = oneDartThrow(isDoubleIn, isDoubleOut);
+                int currentThrow = throwResult.score;
+                ThrowTarget targetThisThrow = throwResult.target;
+                scoreThisVisit += currentThrow;
+
+                // ✅ Safe assignment to list
+                if (dartsThrownVisit < scoresThisVisit.length) {
+                  scoresThisVisit[dartsThrownVisit] = currentThrow;
+                  targetsThisVisit[dartsThrownVisit] = targetThisThrow.toString();
+                }
+
+                score -= currentThrow;
+                dartsInHand--;
+                dartsThrownVisit++;
+
+                setState(() {}); // 👀 Trigger rebuild to update UI
+
+                if (score == 1 || score < 0 || (score == 0 && !checkLegalDoubleScore(scoreThisVisit, isDoubleIn, ""))) {
+                  score = scoreBeforeVisit;
+                  dartThrow(0, isDoubleOut, 3);
+                  print("Bust score!");
+                  Navigator.of(dialogContext).pop();
+                  return;
+                } else if (score == 0) {
+                  break;
+                }
+              }
+
+              await Future.delayed(const Duration(seconds: 1));
+              dartThrow(scoreThisVisit, isDoubleOut, dartsThrownVisit);
+              Navigator.of(dialogContext).pop();
+              if (onComplete != null) onComplete();
+            }
+
+            // 🧠 Trigger only once when the dialog is built
+            if (!hasRun) {
+              hasRun = true;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                runThrows();
+              });
+            }
+
+            return AlertDialog(
+              title: Text("$name is throwing: ($score left)", style: const TextStyle(fontSize: 20)),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: List.generate(3, (index) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        targetsThisVisit[index],
+                        style: const TextStyle(fontSize: 20),
+                      ),
+
+                      Text(
+                        scoresThisVisit[index].toString(),
+                        style: const TextStyle(fontSize: 20),
+                      )
+                    ],
+                  ); 
+                }),
+              ),
+            );
+          },
+        );
+      },
+    );
+
+    return true;
+  }
+
+    ({int score, ThrowTarget target}) oneDartThrow(bool isDoubleIn, bool isDoubleOut) {
         ThrowTarget target = getThrowTarget(isDoubleIn, isDoubleOut);
         DistributionTable distroTable;
         if (target.number == 25) {
@@ -219,8 +313,9 @@ class DartBot extends DartPlayer {
             distroTable = this.distroTables[2];
         }
 
-        int rng = Random().nextInt(1000);
-        return distroTable.getThrowResult(rng, target.number);
+        int rng = Random().nextInt(1000); 
+        return (score: distroTable.getThrowResult(rng, target.number), 
+                target: target);
     }
 
     @override

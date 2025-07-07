@@ -49,13 +49,13 @@ class ThrowTarget {
             throw Exception("Illegal Number Located");
         }
         if (this.multiplier == 3) {
-            return "Treble $this.number";
+            return "T$number";
         } else if (this.multiplier == 2 && this.number != 25) {
-            return "Double $this.number";
+            return "D$number";
         } else if (this.multiplier == 1) {
-            return "Single $this.number";
+            return "S$number";
         } else if (this.multiplier == 2 && this.number == 25) {
-            return "Bullseye";
+            return "BULL";
         }
         throw Exception("Illegal Multiplier located");
     }

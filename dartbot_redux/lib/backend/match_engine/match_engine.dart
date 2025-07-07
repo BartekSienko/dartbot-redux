@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
@@ -21,7 +23,7 @@ class MatchEngine extends ChangeNotifier{
 
 
 
-  void initMatch() {
+  Future<void> initMatch() async {
     newLeg();
     onThrow = 1;
     onThrowSet = 1;
@@ -29,10 +31,12 @@ class MatchEngine extends ChangeNotifier{
     
     if (player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
-      p1.visitThrow(0, matchRules.doubleOut, 
-                            matchRules.doubleIn, "");
+      await p1.visualVisitThrow(matchRules.doubleOut, 
+                            matchRules.doubleIn, context!, onComplete: () {
+      checkForFinishedLeg();
       notifyListeners();
       throwing = 2;
+      });
     }
   }
 
@@ -95,7 +99,6 @@ class MatchEngine extends ChangeNotifier{
       return false;
     }
     
-    /// TODO: ADD POP-UP FOR DOUBLES AND DARTS AT CHECKOUT
     Set<int> possibleDartsAtDouble = playerThrowing.getPossibleDartsAtDouble(pointsScored);
     Set<int> possibleDartsAtCheckout = playerThrowing.getPossibleDartsForCheckout(pointsScored);
 
@@ -120,24 +123,34 @@ class MatchEngine extends ChangeNotifier{
     
     notifyListeners();
 
-    checkForDartBot();
+    await checkForDartBot(context);
 
 
     return true;
   }
 
 
-  void checkForDartBot() {
+  Future<void> checkForDartBot(BuildContext context) async {
     if (throwing == 1 && player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
-      p1.visitThrow(0, matchRules.doubleOut, 
-                            matchRules.doubleIn, "");
+      await p1.visualVisitThrow(matchRules.doubleOut, 
+                            matchRules.doubleIn, context, onComplete: () async {
+      checkForFinishedLeg();
+      notifyListeners();
+      await checkForDartBot(context);
+
+      });
     } else if (throwing == 1) {
       return;
     } else if (throwing == 2 && player2 is DartBot) {
       DartBot p2 = player2 as DartBot;
-      p2.visitThrow(0, matchRules.doubleOut, 
-                            matchRules.doubleIn, "");
+      await p2.visualVisitThrow(matchRules.doubleOut, 
+                            matchRules.doubleIn, context, onComplete: () async {
+      checkForFinishedLeg();
+      notifyListeners();
+      await checkForDartBot(context);
+
+      });
     } else if (throwing == 2) {
       return;
     }
@@ -153,7 +166,7 @@ class MatchEngine extends ChangeNotifier{
     
     notifyListeners();
 
-    checkForDartBot();
+    await checkForDartBot(context);
   }
 
   

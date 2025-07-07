@@ -1,10 +1,7 @@
 // ignore_for_file: unnecessary_this, avoid_print, file_names
 
 import 'dart:collection';
-import 'dart:io';
-
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
-import 'package:flutter/material.dart';
 
 class DartPlayer {
   String name;
