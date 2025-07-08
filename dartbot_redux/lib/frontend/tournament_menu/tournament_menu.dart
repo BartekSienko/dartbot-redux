@@ -145,8 +145,8 @@ class _TournamentMenuState extends State<TournamentMenu> {
 
 
 
-  MatchLogic rules1 = MatchLogic(301, 6, false, 0, false, false);
-  MatchLogic rules2 = MatchLogic(301, 8, false, 0, false, false);
+  MatchLogic rules1 = MatchLogic(301, 6, false, 0, false, false, false);
+  MatchLogic rules2 = MatchLogic(301, 8, false, 0, false, false, false);
   List<MatchLogic> rulesets = [rules1, rules1, rules2, rules2];
 
   List<int> prizeMoney = [120, 60, 40, 25, 12, 8];

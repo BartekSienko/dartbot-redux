@@ -7,8 +7,9 @@ class MatchLogic {
   final int setLimit;
   final bool doubleOut;
   final bool doubleIn;
+  final bool winBy2;
 
-  MatchLogic(this.startScore, this.legLimit, this.isSetPlay, this.setLimit, this.doubleOut, this.doubleIn);
+  MatchLogic(this.startScore, this.legLimit, this.isSetPlay, this.setLimit, this.doubleOut, this.doubleIn, this.winBy2);
 
 
   int getStartScore() {
@@ -39,7 +40,8 @@ class MatchLogic {
              isSetPlay == other.isSetPlay &&
              setLimit == other.setLimit &&
              doubleOut == other.doubleOut &&
-             doubleIn == other.doubleIn;
+             doubleIn == other.doubleIn &&
+             winBy2 == other.winBy2;
     }
     return false;
   }

@@ -236,8 +236,8 @@ void main() {
   List<List<DartPlayer>> players = [round0, round1, round2, round3];
 
 
-  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false);
-  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false);
+  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false, false);
+  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false, false);
   List<MatchLogic> rulesets = [rules1, rules1, rules1, rules2];
 
   List<int> prizeMoney = [120, 60, 40, 25, 12, 8];

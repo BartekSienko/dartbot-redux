@@ -220,14 +220,29 @@ class MatchEngine extends ChangeNotifier{
   }
 
   void checkForMatchWinner(DartPlayer player, int nr) {
+    DartPlayer maybeWon;
+    DartPlayer maybeLost;
+    
+    if (player1 == player) {
+      maybeWon = player1;
+      maybeLost = player2;
+    } else {
+      maybeWon = player2;
+      maybeLost = player1;
+    }
+
+    bool leadingBy2 = !matchRules.winBy2 || (maybeWon.legs - maybeLost.legs > 1);
+    bool isSuddenDeath = player.legs >= (matchRules.legLimit + 3);
+
+
     if (matchRules.isSetPlay) {
-      if (player.sets >= matchRules.setLimit) {
+      if (player.sets >= matchRules.setLimit && (leadingBy2 || isSuddenDeath)) {
         winner = nr;
         matchFinished = true;
         showMatchStats(context);
       }
     } else {
-      if (player.legs >= matchRules.legLimit) {
+      if (player.legs >= matchRules.legLimit && (leadingBy2 || isSuddenDeath)) {
        winner = nr;
        matchFinished = true;
        showMatchStats(context);
