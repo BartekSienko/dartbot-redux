@@ -20,7 +20,7 @@ class TournamentMenu extends StatefulWidget{
 }
 
 class _TournamentMenuState extends State<TournamentMenu> {
-  MatchTheme matchTheme = MatchTheme('GrandPrix');
+  late MatchTheme matchTheme;
   late Tournament tournament;
   
 
@@ -28,6 +28,7 @@ class _TournamentMenuState extends State<TournamentMenu> {
   void initState(){
     super.initState();
     tournament = genTournament();
+    matchTheme = tournament.matchTheme;
   }
   
 
