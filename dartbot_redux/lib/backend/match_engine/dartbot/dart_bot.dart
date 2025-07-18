@@ -25,6 +25,16 @@ class DartBot extends DartPlayer {
       DistributionTable("Bullseye", rating),
     ];
 
+
+  DartPlayer convertToPlayer() {
+    DartPlayer player = DartPlayer(name, rating);
+    player.score = score;
+    player.legs = legs;
+    player.sets = sets;
+    player.stats = stats;
+    return player;
+  }
+
     ThrowTarget getThrowTarget(bool isDoubleIn, bool isDoubleOut) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;

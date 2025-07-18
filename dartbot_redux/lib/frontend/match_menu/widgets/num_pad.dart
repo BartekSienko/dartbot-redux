@@ -9,13 +9,15 @@ class NumPad extends StatefulWidget{
   final MatchEngine matchEngine;
   final MatchTheme matchTheme;
   final double height;
+  final VoidCallback onReload;
 
   
   const NumPad({
     super.key,
     required this.matchEngine,
     required this.matchTheme,
-    required this.height
+    required this.height,
+    required this.onReload
   });
 
   @override
@@ -26,6 +28,7 @@ class NumPad extends StatefulWidget{
 class _NumPadState extends State<NumPad> {
   late MatchEngine matchEngine;
   late MatchTheme matchTheme;
+  late VoidCallback onReload;
   late double height;
 
   String inputingScore = "";
@@ -36,6 +39,7 @@ class _NumPadState extends State<NumPad> {
     super.initState();
     matchEngine = widget.matchEngine;
     matchTheme = widget.matchTheme;
+    onReload = widget.onReload;
     height = widget.height;
 
     matchEngine.addListener(_onMatchEngineUpdate);  

@@ -5,6 +5,7 @@ import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
+import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
 import 'package:flutter/material.dart';
 
 class MatchEngine extends ChangeNotifier{
@@ -39,6 +40,48 @@ class MatchEngine extends ChangeNotifier{
       });
     }
   }
+
+
+
+  void simPortion(int count, String simming) {
+    DartBot p1Copy = player1.createBotCopy();
+    DartBot p2Copy = player2.createBotCopy();
+    SimMatchEngine simEngine;
+    
+    
+    if (simming == 'leg') {
+      MatchLogic copyRules = MatchLogic(matchRules.startScore, 1, 
+                                        false, 0, 
+                                        matchRules.doubleOut, matchRules.doubleIn, 
+                                        false);
+      
+      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, false);
+    } else if (simming == 'set') {
+      MatchLogic copyRules = MatchLogic(matchRules.startScore, matchRules.legLimit, 
+                                        matchRules.isSetPlay, 1, 
+                                        matchRules.doubleOut, matchRules.doubleIn, 
+                                        false);
+      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, false);
+
+    } else {
+      p1Copy.sets = player1.sets;
+      p2Copy.sets = player2.sets;
+
+      simEngine = SimMatchEngine(p1Copy, p2Copy, matchRules, false);
+    }
+
+    int won = simEngine.simMatch();
+
+    player1.combine(p1Copy);
+    player2.combine(p2Copy);
+
+    DartPlayer p = won == 1 ? player1 : player2;
+
+    checkForMatchWinner(p, won, false);
+  }
+
+
+
 
   void newLeg() {
         player1.score = matchRules.getStartScore();
@@ -175,13 +218,13 @@ class MatchEngine extends ChangeNotifier{
       player1.legs++;
       player2.score = 0;
       checkForNewBestWorst(player1);
-      checkForMatchWinner(player1, 1);
+      checkForMatchWinner(player1, 1, false);
       newLeg();
     } else if (player2.score <= 0) {
       player2.legs++;
       player1.score = 0;
       checkForNewBestWorst(player2);
-      checkForMatchWinner(player2, 2);
+      checkForMatchWinner(player2, 2, false);
       newLeg();
     }
 
@@ -208,18 +251,18 @@ class MatchEngine extends ChangeNotifier{
             player1.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player1, 1);
+            checkForMatchWinner(player1, 1, false);
             newLeg();
         } else if (player2.legs >= matchRules.getLegLimit()) {
             player2.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player2, 2);
+            checkForMatchWinner(player2, 2, false);
             newLeg();
         }
   }
 
-  void checkForMatchWinner(DartPlayer player, int nr) {
+  void checkForMatchWinner(DartPlayer player, int nr, bool ifDoublePop) {
     DartPlayer maybeWon;
     DartPlayer maybeLost;
     
@@ -239,13 +282,13 @@ class MatchEngine extends ChangeNotifier{
       if (player.sets >= matchRules.setLimit && (leadingBy2 || isSuddenDeath)) {
         winner = nr;
         matchFinished = true;
-        showMatchStats(context);
+        showMatchStats(context, ifDoublePop);
       }
     } else {
       if (player.legs >= matchRules.legLimit && (leadingBy2 || isSuddenDeath)) {
        winner = nr;
        matchFinished = true;
-       showMatchStats(context);
+       showMatchStats(context, ifDoublePop);
       }
     }
   }
@@ -279,10 +322,14 @@ class MatchEngine extends ChangeNotifier{
   }
 
 
-  void showMatchStats(BuildContext? context) {
+  void showMatchStats(BuildContext? context, bool ifDoublePop) {
     if (context == null) return;
+
+    // Save the outer context
+    final outerContext = context;
+
   showDialog(
-    context: context,
+    context: outerContext,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
         title: Center(child: Text('Match Stats')),
@@ -294,7 +341,10 @@ class MatchEngine extends ChangeNotifier{
             onPressed: () {
               Navigator.of(dialogContext).pop(); // close the dialog
               if (matchFinished) {
-                Navigator.of(context).pop(winner); // pop the page
+                Navigator.of(outerContext).pop(winner);
+                if (ifDoublePop) Navigator.of(outerContext).pop(winner);
+                
+
               }
                      
             },

@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_this, avoid_print, file_names
 
 import 'dart:collection';
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 
 class DartPlayer {
@@ -120,6 +121,21 @@ class DartPlayer {
       legStats.worstLeg = dartsThrownLeg;
     }
   }
+
+  void combine(DartPlayer otherPlayer) {
+    score = otherPlayer.score;
+    legs += otherPlayer.legs;
+    sets += otherPlayer.sets;
+    stats = otherPlayer.stats;
+  }
+
+
+  DartBot createBotCopy() {
+    DartBot copy = DartBot(name, rating);
+    copy.stats = stats;
+    return copy;
+  }
+
 
   @override
   String toString() {

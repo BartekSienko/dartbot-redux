@@ -10,12 +10,14 @@ class StatBox extends StatefulWidget{
   final MatchEngine matchEngine;
   final MatchTheme matchTheme;
   final double height;
+  final VoidCallback onReload;
 
   
   const StatBox({
     super.key,
     required this.matchEngine,
     required this.matchTheme,
+    required this.onReload,
     required this.height
   });
 
@@ -27,6 +29,7 @@ class StatBox extends StatefulWidget{
 class _StatBoxState extends State<StatBox> {
   late MatchEngine matchEngine;
   late MatchTheme matchTheme;
+  late VoidCallback onReload;
 
   late double height;
 
@@ -37,6 +40,7 @@ class _StatBoxState extends State<StatBox> {
     super.initState();
     matchEngine = widget.matchEngine;
     matchTheme = widget.matchTheme;
+    onReload = widget.onReload;
 
 
     matchEngine.addListener(_onMatchEngineUpdate);  
@@ -210,7 +214,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
 }
 
   Widget buildStatAndSimButtons(double screenWidth) {
-    double fontSize = screenWidth / 32;
+    double fontSize = screenWidth / 35;
 
     return Column(
       children: [  
@@ -223,7 +227,7 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
             child: buildButton("Match\n Stats",
                               fontSize,
                               () {
-                                matchEngine.showMatchStats(context);
+                                matchEngine.showMatchStats(context, false);
                               })                             
           ),
         ),
@@ -233,10 +237,10 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
           child: Padding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 8.0,
                                                   vertical: 12.0),
-            child: buildButton("Sim\nLeg",
+            child: buildButton("Sim\nPortion",
                               fontSize,
                               () {
-
+                                simMatchPortionDialog();
                               })                             
           ),
         ),
@@ -266,6 +270,76 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
             )
         );
 
+  }
+
+  void simMatchPortionDialog() {
+
+  showDialog(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      double height = MediaQuery.of(dialogContext).size.height;
+
+
+      return AlertDialog(
+        backgroundColor: matchTheme.secondaryColor,
+        title: const Center(child: Text('How much to sim?')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // important for sizing
+          children: [
+            buildButton(
+              "Sim 1 Leg",
+              16,
+              () {
+                matchEngine.simPortion(1, 'leg');
+                Navigator.of(dialogContext).pop();
+                onReload();
+                matchEngine.checkForFinishedSet();
+                matchEngine.checkForFinishedSet();
+              },
+            ),
+            if (matchEngine.matchRules.isSetPlay)... [
+
+            SizedBox(height: height / 150, child: Container(color: matchTheme.secondaryColor),),
+            buildButton(
+              "Sim 1 Set",
+              16,
+              () {
+                matchEngine.simPortion(1, 'set');
+                Navigator.of(dialogContext).pop();
+                onReload();
+                matchEngine.checkForMatchWinner(matchEngine.player1, 1, true);
+                matchEngine.checkForMatchWinner(matchEngine.player2, 2, true);
+                
+              },
+            ),          
+            ],
+            SizedBox(height: height / 150, child: Container(color: matchTheme.secondaryColor),),
+            buildButton(
+              "Sim Match",
+              16,
+              () {
+                matchEngine.simPortion(1, 'match');
+                Navigator.of(dialogContext).pop();
+                onReload();
+                matchEngine.checkForMatchWinner(matchEngine.player1, 1, true);
+                matchEngine.checkForMatchWinner(matchEngine.player2, 2, true);
+
+              },
+            ),
+            SizedBox(height: height / 150, child: Container(color: matchTheme.secondaryColor),),
+            buildButton(
+              "Go Back",
+              16,
+              () {
+                Navigator.of(dialogContext).pop();
+              },
+            )
+            
+          ],
+        ),
+      );
+    },
+  );
   }
 
 

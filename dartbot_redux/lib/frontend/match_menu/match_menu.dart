@@ -64,7 +64,10 @@ class _MatchMenuState extends State<MatchMenu> {
                 right: 0,
                 child: Scoreboard(matchEngine: matchEngine,
                                   matchTheme: matchTheme,
-                                  height: screenHeight * 0.21),
+                                  height: screenHeight * 0.21,
+                                  onReload: () {
+                                  setState(() {});
+                                  }),
               ),
               Positioned(
                 top: screenHeight * 0.23,
@@ -73,7 +76,10 @@ class _MatchMenuState extends State<MatchMenu> {
                 right: 0,
                 child: StatBox(matchEngine: matchEngine,
                                matchTheme: matchTheme,
-                               height: screenHeight * 0.2),
+                               height: screenHeight * 0.2,
+                               onReload: () {
+                                  setState(() {});
+                                })
               ),
               Positioned(
                 top: screenHeight * 0.45,
@@ -82,7 +88,10 @@ class _MatchMenuState extends State<MatchMenu> {
                 right: 0,
                 child: NumPad(matchEngine: matchEngine,
                               matchTheme: matchTheme,
-                              height: screenHeight * 0.55),
+                              height: screenHeight * 0.55,
+                              onReload: () {
+                                  setState(() {});
+                                }),
               ),
             ],
           );

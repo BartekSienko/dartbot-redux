@@ -46,7 +46,7 @@ class SimMatchEngine extends MatchEngine{
   }
 
   @override
-  void showMatchStats(BuildContext? context) {
+  void showMatchStats(BuildContext? context, bool ifDoublePop) {
     if (context == null) return;
 
     if (!fullSim) {
