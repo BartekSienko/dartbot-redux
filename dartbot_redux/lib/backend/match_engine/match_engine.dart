@@ -3,7 +3,6 @@
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
-import 'package:dartbot_redux/backend/match_engine/duo_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
@@ -81,7 +80,7 @@ class MatchEngine extends ChangeNotifier{
 
     DartPlayer p = won == 1 ? player1 : player2;
 
-    checkForMatchWinner(p, won, false);
+    checkForMatchWinner(p, won, true);
   }
 
 
@@ -226,7 +225,7 @@ class MatchEngine extends ChangeNotifier{
     }
 
     if (matchRules.isSetPlay) {
-      checkForFinishedSet();
+      checkForFinishedSet(false);
     }
 
   }
@@ -243,18 +242,18 @@ class MatchEngine extends ChangeNotifier{
     }
   }
 
-  void checkForFinishedSet() {
+  void checkForFinishedSet(bool ifDoublePop) {
     if (player1.legs >= matchRules.getLegLimit()) {
             player1.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player1, 1, false);
+            checkForMatchWinner(player1, 1, ifDoublePop);
             newLeg();
         } else if (player2.legs >= matchRules.getLegLimit()) {
             player2.sets++;
             player1.legs = 0;
             player2.legs = 0;
-            checkForMatchWinner(player2, 2, false);
+            checkForMatchWinner(player2, 2, ifDoublePop);
             newLeg();
         }
   }
@@ -282,7 +281,7 @@ class MatchEngine extends ChangeNotifier{
         showMatchStats(context, ifDoublePop);
       }
     } else {
-      if (player.legs >= matchRules.legLimit && (leadingBy2 || isSuddenDeath)) {
+      if (player.legs >= matchRules.legLimit && (leadingBy2 || isSuddenDeath) || player.sets > 0) {
        winner = nr;
        matchFinished = true;
        showMatchStats(context, ifDoublePop);
