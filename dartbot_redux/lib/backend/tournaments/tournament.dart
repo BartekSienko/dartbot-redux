@@ -63,7 +63,7 @@ class Tournament {
     MatchLogic matchRules = rulesets[curRoundNr];
 
     if (p1Playing is DartBot && p2Playing is DartBot) {
-      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, false, context);
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, 1, false, context);
       result = matchEngine.simMatch();
       
       
@@ -115,7 +115,7 @@ class Tournament {
       DartPlayer p2Playing = DartBot(currentMatch.player2.name, currentMatch.player2.rating);
 
 
-      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, true, context);
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, 1, true, context);
       int result = matchEngine.simMatch();
       
       currentMatch.player1 = p1Playing;

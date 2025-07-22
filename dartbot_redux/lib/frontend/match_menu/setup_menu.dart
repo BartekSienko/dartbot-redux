@@ -265,7 +265,7 @@ class _SetupMenuState extends State<SetupMenu> {
     MatchEngine matchEngine;
 
     if (player1 is DartBot && player2 is DartBot) {
-      matchEngine = SimMatchEngine(player1, player2, rules, false, context);      
+      matchEngine = SimMatchEngine(player1, player2, rules, 1, false, context);      
     } else {
       matchEngine = MatchEngine(player1, player2, rules, context);
     }

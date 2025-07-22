@@ -58,19 +58,19 @@ class MatchEngine extends ChangeNotifier{
                                         matchRules.doubleOut, matchRules.doubleIn, 
                                         false);
       
-      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, false);
+      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, onThrow, false);
     } else if (simming == 'set') {
       MatchLogic copyRules = MatchLogic(matchRules.startScore, matchRules.legLimit, 
                                         matchRules.isSetPlay, 1, 
                                         matchRules.doubleOut, matchRules.doubleIn, 
                                         false);
-      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, false);
+      simEngine = SimMatchEngine(p1Copy, p2Copy, copyRules, onThrow, false);
 
     } else {
       p1Copy.sets = player1.sets;
       p2Copy.sets = player2.sets;
 
-      simEngine = SimMatchEngine(p1Copy, p2Copy, matchRules, false);
+      simEngine = SimMatchEngine(p1Copy, p2Copy, matchRules, onThrow, false);
     }
 
     int won = simEngine.simMatch();

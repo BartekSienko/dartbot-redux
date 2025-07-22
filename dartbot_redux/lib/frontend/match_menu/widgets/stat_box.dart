@@ -292,6 +292,10 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
                 matchEngine.simPortion(1, 'leg');
                 Navigator.of(dialogContext).pop();
                 onReload();
+
+                if (matchEngine.matchRules.isSetPlay) {
+                  matchEngine.checkForFinishedSet(true);
+                }
                 matchEngine.checkForMatchWinner(matchEngine.player1, 1, true);
                 matchEngine.checkForMatchWinner(matchEngine.player2, 2, true);
               },
