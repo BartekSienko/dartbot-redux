@@ -231,7 +231,6 @@ Widget buildStatText(List<String> stats, double fontSize, Color textColor, Color
                               })                             
           ),
         ),
-        // TODO: Implement Sim Button
         Expanded(
           flex: 50, 
           child: Padding(

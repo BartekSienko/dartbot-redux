@@ -254,6 +254,7 @@ class DartBot extends DartPlayer {
                   dartThrow(0, isDoubleOut, 3);
                   print("Bust score!");
                   Navigator.of(dialogContext).pop();
+                  if (onComplete != null) onComplete();
                   return;
                 } else if (score == 0) {
                   break;

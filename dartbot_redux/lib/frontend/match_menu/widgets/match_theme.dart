@@ -41,6 +41,15 @@ class MatchTheme {
       mainBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
       nameBoxTextColor = const Color.fromARGB(255, 0, 0, 0);
 
+    } else if (themeText == 'WorldCup') {
+      mainColor = Colors.purple; 
+      secondaryColor = const Color.fromARGB(255, 255, 255, 255);
+      backgroundColor = const Color.fromARGB(255, 89, 22, 101);
+      mainBoxColor = Colors.purple;
+      nameBoxColor = const Color.fromARGB(255, 220, 220, 220);
+      mainBoxTextColor = const Color.fromARGB(255, 255, 255, 255);
+      nameBoxTextColor = const Color.fromARGB(255, 0, 0, 0);
+
     } else if (themeText == 'Matchplay') {
       mainColor = const Color.fromARGB(255, 59, 120, 62); 
       secondaryColor = const Color.fromARGB(255, 255, 255, 255);

@@ -3,6 +3,7 @@
 import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/duo_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/match_engine/player_match_stats.dart';
 import 'package:dartbot_redux/backend/match_engine/sim_match_engine.dart';
@@ -30,6 +31,7 @@ class MatchEngine extends ChangeNotifier{
     onThrowSet = 1;
     throwing = 1;
     
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
     if (player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
       await p1.visualVisitThrow(matchRules.doubleOut, 
@@ -37,8 +39,10 @@ class MatchEngine extends ChangeNotifier{
       checkForFinishedLeg();
       notifyListeners();
       throwing = 2;
+      checkForDartBot(context!);
       });
     }
+    });
   }
 
 
@@ -89,21 +93,27 @@ class MatchEngine extends ChangeNotifier{
         player2.score = matchRules.getStartScore();
         player2.stats.dartsThrownLeg = 0;
         if (onThrow == 1) {
-            onThrow = 2;
+            setThrow(2, false);
         } else {
-            onThrow = 1;
+            setThrow(1, false);
         }
         if (player1.legs == 0 && player2.legs == 0) {
             if (onThrowSet == 1) {
-                onThrow = 2;
-                onThrowSet = 2;
+              setThrow(2, true);
             } else {
-                onThrow = 1;
-                onThrowSet = 1;
+              setThrow(1, true);
             }
         }
         throwing = onThrow;
     }
+
+  void setThrow(int nr, bool ifSetPlay) {
+      if (ifSetPlay) {
+        onThrowSet = nr; 
+      }
+      onThrow = nr;
+  }
+
 
 
 
@@ -160,7 +170,7 @@ class MatchEngine extends ChangeNotifier{
     } else {
       throwing = 1;
     }
-  
+    
     
     checkForFinishedLeg();
     
@@ -178,38 +188,25 @@ class MatchEngine extends ChangeNotifier{
       DartBot p1 = player1 as DartBot;
       await p1.visualVisitThrow(matchRules.doubleOut, 
                             matchRules.doubleIn, context, onComplete: () async {
+      throwing = 2;
       checkForFinishedLeg();
       notifyListeners();
       await checkForDartBot(context);
 
       });
-    } else if (throwing == 1) {
-      return;
     } else if (throwing == 2 && player2 is DartBot) {
       DartBot p2 = player2 as DartBot;
       await p2.visualVisitThrow(matchRules.doubleOut, 
                             matchRules.doubleIn, context, onComplete: () async {
+      throwing = 1;
       checkForFinishedLeg();
       notifyListeners();
       await checkForDartBot(context);
 
       });
-    } else if (throwing == 2) {
+    } else {
       return;
     }
-
-    if (throwing == 1) {
-      throwing = 2;
-    } else {
-      throwing = 1;
-    }
-  
-    
-    checkForFinishedLeg();
-    
-    notifyListeners();
-
-    await checkForDartBot(context);
   }
 
   
