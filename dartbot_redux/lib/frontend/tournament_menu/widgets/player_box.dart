@@ -46,6 +46,13 @@ class _PlayerBoxState extends State<PlayerBox> {
     tournament = widget.tournament;
     focusPlayer = widget.focusPlayer;
     onReload = widget.onReload;
+    if (tournament.isFinished()) {
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+        displayTournamentResults(context, 14);
+    });
+    }
 
   }
 
