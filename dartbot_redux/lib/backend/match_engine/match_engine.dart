@@ -242,19 +242,32 @@ class MatchEngine extends ChangeNotifier{
     }
   }
 
+  // TODO: Refactor this absolute crap
   void checkForFinishedSet(bool ifDoublePop) {
+    bool isLastSet = player1.sets == player2.sets && player1.sets == (matchRules.setLimit - 1);
+
+    
+
     if (player1.legs >= matchRules.getLegLimit()) {
+      bool leadingBy2 = !matchRules.winBy2 || (player1.legs - player2.legs > 1);
+      bool isSuddenDeath = player1.legs >= (matchRules.legLimit + 3);
+        if (!isLastSet || (leadingBy2 || isSuddenDeath)) {
             player1.sets++;
             player1.legs = 0;
             player2.legs = 0;
             checkForMatchWinner(player1, 1, ifDoublePop);
             newLeg();
+          }
         } else if (player2.legs >= matchRules.getLegLimit()) {
-            player2.sets++;
-            player1.legs = 0;
-            player2.legs = 0;
-            checkForMatchWinner(player2, 2, ifDoublePop);
-            newLeg();
+          bool leadingBy2 = !matchRules.winBy2 || (player2.legs - player1.legs > 1);
+          bool isSuddenDeath = player2.legs >= (matchRules.legLimit + 3);
+            if (!isLastSet || (leadingBy2 || isSuddenDeath)) {
+                player2.sets++;
+                player2.legs = 0;
+                player1.legs = 0;
+                checkForMatchWinner(player2, 1, ifDoublePop);
+                newLeg();
+              }
         }
   }
 
@@ -275,7 +288,7 @@ class MatchEngine extends ChangeNotifier{
 
 
     if (matchRules.isSetPlay) {
-      if (player.sets >= matchRules.setLimit && (leadingBy2 || isSuddenDeath)) {
+      if (player.sets >= matchRules.setLimit) {
         winner = nr;
         matchFinished = true;
         showMatchStats(context, ifDoublePop);

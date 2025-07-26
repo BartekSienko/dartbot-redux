@@ -2,7 +2,13 @@
 
 
 
+import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
+import 'package:dartbot_redux/backend/match_engine/dartbot/dart_bot.dart';
+import 'package:dartbot_redux/backend/match_engine/match_engine.dart';
+import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
+import 'package:dartbot_redux/frontend/match_menu/match_menu.dart';
 import 'package:dartbot_redux/frontend/match_menu/setup_menu.dart';
+import 'package:dartbot_redux/frontend/match_menu/widgets/match_theme.dart';
 import 'package:dartbot_redux/frontend/tournament_menu/tournament_menu.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +42,9 @@ class _MainMenuState extends State<MainMenu> {
             Expanded(flex: 2, child: Container()),
             Expanded(flex: 20, child: createMenuButton("Career Mode", "NOT YET IMPLEMENTED!\nPlay out a custom career mode", fontSize, SetupMenu())),
             Expanded(flex: 2, child: Container()),
-            Expanded(flex: 20, child: createMenuButton("Profile", "NOT YET IMPLEMENTED!\nLook at your profile and all-time stats", fontSize, SetupMenu())),
+            Expanded(flex: 20, child: createMenuButton("Profile", "NOT YET IMPLEMENTED!\nLook at your profile and all-time stats", fontSize, MatchMenu(matchEngine: MatchEngine(DartPlayer("Barenko", 100), DartBot("Hugo", 100),
+                                                                                                                                                       MatchLogic(301, 3, true, 3, false, false, true), context), 
+                                                                                                                                                       matchTitle: "Uppsala Open", matchTheme: MatchTheme("WC")))),
             Expanded(flex: 2, child: Container()),
           ],
         ) 
