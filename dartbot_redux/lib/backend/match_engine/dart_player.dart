@@ -139,12 +139,9 @@ class DartPlayer {
 
   @override
   String toString() {
-    return "($legs)  $score  $name";
+    return "($name, $rating)";
   }
 
-  String toStringSetPlay() {
-        return "(${this.sets}) (${this.legs})  ${this.score}  ${this.name}";
-    }
 
   String toStringStats() {
   return this.name + this.stats.toString();

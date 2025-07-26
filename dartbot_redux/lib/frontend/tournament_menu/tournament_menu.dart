@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:dartbot_redux/backend/file_management/json_manager.dart';
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/match_engine/match_logic.dart';
 import 'package:dartbot_redux/backend/tournaments/tournament.dart';
@@ -11,9 +12,9 @@ import 'package:flutter/material.dart';
 
 
 class TournamentMenu extends StatefulWidget{
-  
+  final Tournament tournament;
 
-  const TournamentMenu({super.key});
+  const TournamentMenu({super.key, required this.tournament});
 
   @override
   State<TournamentMenu> createState() => _TournamentMenuState();
@@ -25,9 +26,9 @@ class _TournamentMenuState extends State<TournamentMenu> {
   
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    tournament = genTournament();
+    tournament = widget.tournament;
     matchTheme = tournament.matchTheme;
   }
   
@@ -40,6 +41,8 @@ class _TournamentMenuState extends State<TournamentMenu> {
   Widget build(BuildContext context) {
     if (tournament.rounds.isEmpty) {
       tournament.rounds.add(tournament.generateRound());
+      JsonManager jsonMan = JsonManager();
+      jsonMan.saveTournament(tournament);
     }
 
   return Scaffold(
@@ -99,40 +102,13 @@ class _TournamentMenuState extends State<TournamentMenu> {
 
 }
 
+  Future<Tournament> genTournamentFromFile() async {
+    JsonManager jsonMan = JsonManager();
+    return await jsonMan.loadTournamentFromFile("World Grand Prix.json");
+  }
+
   //TODO: Stub function while testing on a already existing Tournament
   Tournament genTournament(){
-  List<DartPlayer> round0 = [DartPlayer("N. Aspinall", 12),
-                             DartPlayer("R. Cross", 12),
-                             DartPlayer("S. Bunting", 13),
-                             DartPlayer("J. Clayton", 13),
-                             DartPlayer("L. Littler", 15),
-                             DartPlayer("G. Price", 14),
-                             DartPlayer("L. Humphries", 15),
-                             DartPlayer("M. van Gerwen", 14),
-                             DartPlayer("N. Aspinall", 12),
-                             DartPlayer("R. Cross", 12),
-                             DartPlayer("S. Bunting", 13),
-                             DartPlayer("J. Clayton", 13),
-                             DartPlayer("L. Littler", 15),
-                             DartPlayer("G. Price", 14),
-                             DartPlayer("L. Humphries", 15),
-                             DartPlayer("M. van Gerwen", 14),
-                             DartPlayer("N. Aspinall", 12),
-                             DartPlayer("R. Cross", 12),
-                             DartPlayer("S. Bunting", 13),
-                             DartPlayer("J. Clayton", 13),
-                             DartPlayer("L. Littler", 15),
-                             DartPlayer("G. Price", 14),
-                             DartPlayer("L. Humphries", 15),
-                             DartPlayer("M. van Gerwen", 14),
-                             DartPlayer("N. Aspinall", 12),
-                             DartPlayer("R. Cross", 12),
-                             DartPlayer("S. Bunting", 13),
-                             DartPlayer("J. Clayton", 13),
-                             DartPlayer("L. Littler", 15),
-                             DartPlayer("G. Price", 14),
-                             DartPlayer("L. Humphries", 15),
-                             DartPlayer("M. van Gerwen", 14)];
   List<DartPlayer> round1 = [DartPlayer("N. Aspinall", 12),
                              DartPlayer("R. Cross", 12),
                              DartPlayer("S. Bunting", 13),

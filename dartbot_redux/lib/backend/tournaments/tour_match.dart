@@ -15,6 +15,9 @@ class TourMatch {
       winner = 0;
 
 
-
+  @override
+  String toString() {
+    return "(${player1.toString()} vs ${player2.toString()}, $ifPlayed, $winner)";
+  }
 
 }

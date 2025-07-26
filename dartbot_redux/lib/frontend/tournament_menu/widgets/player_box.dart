@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 
+import 'package:dartbot_redux/backend/file_management/json_manager.dart';
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
 import 'package:dartbot_redux/backend/tournaments/tour_match.dart';
 import 'package:dartbot_redux/backend/tournaments/tournament.dart';
@@ -45,6 +46,13 @@ class _PlayerBoxState extends State<PlayerBox> {
     tournament = widget.tournament;
     focusPlayer = widget.focusPlayer;
     onReload = widget.onReload;
+    if (tournament.isFinished()) {
+      
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+        displayTournamentResults(context, 14);
+    });
+    }
 
   }
 
@@ -158,6 +166,8 @@ class _PlayerBoxState extends State<PlayerBox> {
                           displayTournamentResults(context, fontSize);
                         } else {
                           tournament.rounds.add(tournament.generateRound());
+                          JsonManager jsonTournament = JsonManager();
+                          jsonTournament.saveTournament(tournament);
                           onReload();
                           setState(() {});
                         }
