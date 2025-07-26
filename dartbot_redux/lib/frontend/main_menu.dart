@@ -42,9 +42,7 @@ class _MainMenuState extends State<MainMenu> {
             Expanded(flex: 2, child: Container()),
             Expanded(flex: 20, child: createMenuButton("Career Mode", "NOT YET IMPLEMENTED!\nPlay out a custom career mode", fontSize, SetupMenu())),
             Expanded(flex: 2, child: Container()),
-            Expanded(flex: 20, child: createMenuButton("Profile", "NOT YET IMPLEMENTED!\nLook at your profile and all-time stats", fontSize, MatchMenu(matchEngine: MatchEngine(DartPlayer("Barenko", 100), DartBot("Hugo", 100),
-                                                                                                                                                       MatchLogic(301, 3, true, 3, false, false, true), context), 
-                                                                                                                                                       matchTitle: "Uppsala Open", matchTheme: MatchTheme("WC")))),
+            Expanded(flex: 20, child: createMenuButton("Profile", "NOT YET IMPLEMENTED!\nLook at your profile and all-time stats", fontSize, SetupMenu())),
             Expanded(flex: 2, child: Container()),
           ],
         ) 
