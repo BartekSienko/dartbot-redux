@@ -33,6 +33,11 @@ class MatchLogic {
   }
 
   @override
+  String toString() {
+    return "($startScore, $legLimit, $isSetPlay, $setLimit, $doubleOut, $doubleIn, $winBy2)";
+  }
+
+  @override
   bool operator ==(Object other) {
     if (other is MatchLogic) {
       return startScore == other.startScore &&

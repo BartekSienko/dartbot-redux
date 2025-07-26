@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 
 class MatchTheme {
+  late String name;
   late Color mainColor;
   late Color secondaryColor;
   late Color backgroundColor;
@@ -14,6 +15,7 @@ class MatchTheme {
   late Color nameBoxTextColor;
 
   MatchTheme(String themeText) {
+    name = themeText;
     if (themeText == 'WC') {
       mainColor = const Color.fromARGB(255, 59, 120, 62); 
       secondaryColor = const Color.fromARGB(255, 190, 190, 51);

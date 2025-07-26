@@ -331,13 +331,10 @@ class DartBot extends DartPlayer {
 
     @override
     String toString() {
-      return "($legs) $score $name (Bot)";
+      return "DartBot ($name, $rating)";
     }
 
-    @override
-    String toStringSetPlay() {
-        return "($sets) ($legs) $score $name (Bot)";
-    }
+
 
 
 }
