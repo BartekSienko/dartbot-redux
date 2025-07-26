@@ -1,5 +1,7 @@
 
 
+// ignore_for_file: avoid_print
+
 import 'dart:math';
 
 import 'package:dartbot_redux/backend/match_engine/dart_player.dart';
@@ -61,7 +63,7 @@ class Tournament {
     MatchLogic matchRules = rulesets[curRoundNr];
 
     if (p1Playing is DartBot && p2Playing is DartBot) {
-      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, false, context);
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, 1, false, context);
       result = matchEngine.simMatch();
       
       
@@ -113,7 +115,7 @@ class Tournament {
       DartPlayer p2Playing = DartBot(currentMatch.player2.name, currentMatch.player2.rating);
 
 
-      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, true, context);
+      SimMatchEngine matchEngine = SimMatchEngine(p1Playing, p2Playing, matchRules, 1, true, context);
       int result = matchEngine.simMatch();
       
       currentMatch.player1 = p1Playing;
@@ -234,8 +236,8 @@ void main() {
   List<List<DartPlayer>> players = [round0, round1, round2, round3];
 
 
-  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false);
-  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false);
+  MatchLogic rules1 = MatchLogic(301, 6, false, 0, true, false, false);
+  MatchLogic rules2 = MatchLogic(301, 8, false, 0, true, false, false);
   List<MatchLogic> rulesets = [rules1, rules1, rules1, rules2];
 
   List<int> prizeMoney = [120, 60, 40, 25, 12, 8];
@@ -243,6 +245,5 @@ void main() {
 
   Tournament t = Tournament("Test Cup", "PC1", MatchTheme("def"), 6, players, rulesets, prizeMoney, "None");
 
-  // ignore: avoid_print
   print(t.generateRound());
   }

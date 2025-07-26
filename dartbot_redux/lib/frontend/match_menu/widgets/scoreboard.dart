@@ -8,12 +8,14 @@ class Scoreboard extends StatefulWidget{
   final MatchEngine matchEngine;
   final MatchTheme matchTheme;
   final double height;
+  final VoidCallback onReload;
   
   const Scoreboard({
     super.key,
     required this.matchEngine,
     required this.matchTheme,
-    required this.height
+    required this.height,
+    required this.onReload
   });
 
   @override
@@ -25,13 +27,14 @@ class _ScoreboardState extends State<Scoreboard> {
   late MatchEngine matchEngine;
   late MatchTheme matchTheme;
   late double height;
-
+  late VoidCallback onReload;
 
   @override
 void initState() {
   super.initState();
   matchEngine = widget.matchEngine;
   matchTheme = widget.matchTheme;
+  onReload = widget.onReload;
 
   // Add listener to rebuild the widget when MatchEngine notifies
     matchEngine.addListener(_onMatchEngineUpdate);  

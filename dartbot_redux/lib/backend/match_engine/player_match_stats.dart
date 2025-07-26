@@ -79,6 +79,22 @@ int getHighestFromList(List<int> list) {
   return highest;
 }
 
+
+void combine(PlayerMatchStats otherStats) {
+
+  scores.addAll(otherStats.scores);
+  first9scores.addAll(otherStats.first9scores);
+  checkouts.addAll(otherStats.checkouts);
+  dartsThrown = otherStats.dartsThrown;
+  dartsThrownLeg = otherStats.dartsThrownLeg;
+  doublesAttempted = otherStats.doublesAttempted;
+  doublesSucceeded = otherStats.doublesSucceeded;
+  bestLeg = otherStats.bestLeg;
+  worstLeg = otherStats.worstLeg;
+
+}
+
+
 @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

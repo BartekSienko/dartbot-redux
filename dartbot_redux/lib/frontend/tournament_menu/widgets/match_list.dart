@@ -49,7 +49,7 @@ class _MatchListState extends State<MatchList> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double fontSize = screenWidth / 25;
+    double fontSize = screenWidth / 28;
     
     List<TourMatch> currentRound = tournament.rounds[tournament.curRoundNr];
 
@@ -96,7 +96,6 @@ class _MatchListState extends State<MatchList> {
               ],
             )
           ),
-          // TODO: Stub, supposed to be a button
           Expanded(
             flex: 15,
             child: Padding(
@@ -114,7 +113,6 @@ class _MatchListState extends State<MatchList> {
               )
             )
           ),
-        // TODO: Stub, supposed to be a button
           Expanded(
             flex: 15,
             child: Padding(
@@ -155,6 +153,8 @@ class _MatchListState extends State<MatchList> {
                         fontSize: fontSize);
     }
 
+    String playerScore = tournament.rulesets[0].isSetPlay ? player.sets.toString() : player.legs.toString();
+
     
     return Row(
       children: [
@@ -170,7 +170,7 @@ class _MatchListState extends State<MatchList> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Text(
-              player.legs.toString(),
+              playerScore,
               style: style,
               textAlign: TextAlign.right,
             ),

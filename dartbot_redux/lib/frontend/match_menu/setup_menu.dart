@@ -33,6 +33,7 @@ class _SetupMenuState extends State<SetupMenu> {
   String player2Type = '';
   String doubleIn = 'Straight-In';
   String doubleOut = 'Straight-Out';
+  String winBy2 = 'No';
 
 @override
   void dispose() {
@@ -133,6 +134,18 @@ class _SetupMenuState extends State<SetupMenu> {
                       });
                     },
                   ),
+                
+                buildButtonPair(
+                    label1: 'Win by 1',
+                    label2: 'Win by 2',
+                    selected1: winBy2,
+                    onSelected1: (val) {
+                      setState(() {
+                        winBy2 = val;
+                      });
+                    },
+                  ),
+
 
               SizedBox(height: 240),
 
@@ -241,17 +254,18 @@ class _SetupMenuState extends State<SetupMenu> {
     bool isSetPlay = setCount > 1;
     bool isDoubleIn = doubleIn == "Double-In";
     bool isDoubleOut = doubleOut == "Double-Out";
+    bool isWinBy2 = winBy2 == "Win by 2";
     
 
     MatchLogic rules = MatchLogic(startScore, 
                legCount, 
-               isSetPlay, setCount, isDoubleOut, isDoubleIn);
+               isSetPlay, setCount, isDoubleOut, isDoubleIn, isWinBy2);
 
 
     MatchEngine matchEngine;
 
     if (player1 is DartBot && player2 is DartBot) {
-      matchEngine = SimMatchEngine(player1, player2, rules, false, context);      
+      matchEngine = SimMatchEngine(player1, player2, rules, 1, false, context);      
     } else {
       matchEngine = MatchEngine(player1, player2, rules, context);
     }

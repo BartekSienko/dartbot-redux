@@ -9,16 +9,17 @@ import 'package:flutter/material.dart';
 
 class SimMatchEngine extends MatchEngine{
   bool fullSim;
+  int startsThrow;
 
-  SimMatchEngine(super.player1, super.player2, super.matchRules, this.fullSim, [super.context]);
+  SimMatchEngine(super.player1, super.player2, super.matchRules, this.startsThrow, this.fullSim, [super.context]);
 
 
   int simMatch() {
 
     newLeg();
-    onThrow = 1;
-    onThrowSet = 1;
-    throwing = 1;
+    onThrow = startsThrow;
+    onThrowSet = startsThrow;
+    throwing = startsThrow;
 
       while (!matchFinished) {
           if (throwing == 1 && player1 is DartBot) {
@@ -46,7 +47,7 @@ class SimMatchEngine extends MatchEngine{
   }
 
   @override
-  void showMatchStats(BuildContext? context) {
+  void showMatchStats(BuildContext? context, bool ifDoublePop) {
     if (context == null) return;
 
     if (!fullSim) {

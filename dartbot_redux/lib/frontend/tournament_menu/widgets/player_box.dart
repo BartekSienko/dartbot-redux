@@ -160,7 +160,7 @@ class _PlayerBoxState extends State<PlayerBox> {
                           tournament.rounds.add(tournament.generateRound());
                           onReload();
                           setState(() {});
-                        };
+                        }
                         
                       } else {
                         showDialog(
