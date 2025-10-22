@@ -38,14 +38,13 @@ class DartBot extends DartPlayer {
     ThrowTarget getThrowTarget(bool isDoubleIn, bool isDoubleOut) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
-        if (isDoubleIn) {
-            return ThrowTarget(2, 20);
-        }
 
+        /**
         if (!isDoubleOut && remainingScore <= 20) {
           print("Looked here");
           return ThrowTarget(1, remainingScore);
         }
+        */
         
         if (this.dartsInHand == 3 && remainingScore % 3 == 0 && (123 <= remainingScore && remainingScore <= 129)) {
             // Aims for Treble 19 to leave (Treble + Bull) finish if it hits Single 19
@@ -104,6 +103,7 @@ class DartBot extends DartPlayer {
             return ThrowTarget(2, 25);
         } else if (remainingScore <= 40 && remainingScore % 2 == 0) {
             // Aims for Double(20-1) to finish the leg
+            print("REACHED THIS STATEMENT");
             return ThrowTarget(2, (remainingScore / 2).round());
         } else if (57 <= remainingScore && remainingScore <= 60) {
             // Aims for Single(20-17) to leave 'Double 20' finish
@@ -179,7 +179,7 @@ class DartBot extends DartPlayer {
             return ThrowTarget(1, 1);
         }
         // If somehow a ThrowTarget wasn't found, throw a RuntineException
-        throw Exception("Didn't create target for score: $this.score with $this.dartsInHand darts left");
+        throw Exception("Didn't create target for score: ${this.score} with ${this.dartsInHand} darts left");
     }
 
     @override
@@ -196,7 +196,7 @@ class DartBot extends DartPlayer {
                                                       && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn, ""))) {
                 this.score = scoreBeforeVisit;
                 this.dartThrow(0, isDoubleOut, 3);
-                print("Bust score!"); // Removed for QuickSims
+                print("Bust score!, needed $scoreBeforeVisit scored ${this.scoreThisVisit}"); // Removed for QuickSims
                 return false;
             } else if ((this.score) == 0) {
                 break;
