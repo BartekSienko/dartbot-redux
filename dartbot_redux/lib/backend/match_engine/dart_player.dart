@@ -25,13 +25,13 @@ class DartPlayer {
     }
   }
 
-  bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
+  bool visitThrow(int pointsScored, bool isDoubleOut, bool needsToDoubleIn, String errorString) {
     bool legalScore = true;
       legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut, errorString);
       if (score == pointsScored) {
         legalScore = legalScore && checkLegalDoubleScore(pointsScored, true, errorString);
       } 
-      if (stats.dartsThrownLeg == 0 && isDoubleIn) {
+      if (needsToDoubleIn) {
         legalScore = legalScore && checkLegalDoubleScore(pointsScored, false, errorString);
       }
     return legalScore;

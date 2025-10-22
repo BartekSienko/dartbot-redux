@@ -35,7 +35,7 @@ class DartBot extends DartPlayer {
     return player;
   }
 
-    ThrowTarget getThrowTarget(bool isDoubleIn, bool isDoubleOut) {
+    ThrowTarget getThrowTarget(bool needsToDoubleIn, bool isDoubleOut) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
 
@@ -183,7 +183,7 @@ class DartBot extends DartPlayer {
     }
 
     @override
-    bool visitThrow(int pointsScored, bool isDoubleOut, bool isDoubleIn, String errorString) {
+    bool visitThrow(int pointsScored, bool isDoubleOut, bool needsToDoubleIn, String errorString) {
         this.dartsInHand = 3;
         int scoreBeforeVisit = this.score;
         this.scoreThisVisit = 0;
