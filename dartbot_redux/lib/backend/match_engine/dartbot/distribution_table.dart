@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_this, file_names
 
 
+import 'package:dartbot_redux/backend/match_engine/dartbot/throw_target.dart';
+
 class DistributionTable {
 
   String identifier;
@@ -133,7 +135,7 @@ class DistributionTable {
         return distroTable;
     }
 
-    int getThrowResult(int rngNumber, int aimedNumber) {
+    ThrowTarget getThrowResult(int rngNumber, int aimedNumber) {
         int total = 0;
         int index = 0;
         for (int i in this.table) {
@@ -146,11 +148,11 @@ class DistributionTable {
 
         if (this.identifier == "Bullseye") {
             if (index == 0) {
-                return 50;
+                return ThrowTarget(2, 25);
             } else if (index == 1){
-                return 25;
+                return ThrowTarget(1, 25);
             } else {
-                return rngNumber % 20;
+                return ThrowTarget(1, rngNumber % 20);
                 }
             
         }
@@ -160,7 +162,7 @@ class DistributionTable {
 
   
 
-    int getValueOfIndex(int index, int aimedNumber) {
+    ThrowTarget getValueOfIndex(int index, int aimedNumber) {
         int leftOfAimed;
         int leftOfLeft;
         int rightOfAimed;
@@ -179,15 +181,23 @@ class DistributionTable {
 
 
         if (this.identifier == ("Trebles") || this.identifier == ("Singles")) {
-          List<int> scores = [3 * aimedNumber, aimedNumber,
-                              3 * leftOfAimed, leftOfAimed,
-                              3 * rightOfAimed, rightOfAimed,
-                              leftOfLeft, rightOfRight];
+          List<ThrowTarget> scores = [ThrowTarget(3, aimedNumber), 
+                              ThrowTarget(1, aimedNumber),
+                              ThrowTarget(3, leftOfAimed), 
+                              ThrowTarget(1, leftOfAimed),
+                              ThrowTarget(3, rightOfAimed), 
+                              ThrowTarget(1, rightOfAimed),
+                              ThrowTarget(1, leftOfLeft), 
+                              ThrowTarget(1, rightOfRight)];
           return scores[index];
         } else {
-          List<int> scores = [2 * aimedNumber, 0, aimedNumber,
-                              2 * leftOfAimed, leftOfAimed,
-                              2 * rightOfAimed, rightOfAimed];
+          List<ThrowTarget> scores = [ThrowTarget(2, aimedNumber), 
+                              ThrowTarget(0, aimedNumber), 
+                              ThrowTarget(1, aimedNumber),
+                              ThrowTarget(2, leftOfAimed),
+                              ThrowTarget(1, leftOfAimed),
+                              ThrowTarget(2, rightOfAimed),
+                              ThrowTarget(1, rightOfAimed)];
             return scores[index];
             
         }

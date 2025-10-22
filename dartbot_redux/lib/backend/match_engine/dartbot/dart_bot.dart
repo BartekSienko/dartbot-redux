@@ -39,12 +39,29 @@ class DartBot extends DartPlayer {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
 
-        /**
+        
+        if (needsToDoubleIn) {
+          double doubleRNG = Random().nextDouble();
+          // Decides on Double 20, 18 or 16
+          if (doubleRNG >= 0.3) { 
+              return ThrowTarget(2,20);
+          } else if (doubleRNG >= 0.6) { 
+              return ThrowTarget(2,18);
+          } else if (doubleRNG >= 0.9) {
+              return ThrowTarget(2,16);
+          } else {
+            int randomDouble = Random().nextInt(20);
+            return ThrowTarget(2, randomDouble);
+          }
+
+        }
+
+        // Checking out in StraightOut
         if (!isDoubleOut && remainingScore <= 20) {
           print("Looked here");
           return ThrowTarget(1, remainingScore);
         }
-        */
+        
         
         if (this.dartsInHand == 3 && remainingScore % 3 == 0 && (123 <= remainingScore && remainingScore <= 129)) {
             // Aims for Treble 19 to leave (Treble + Bull) finish if it hits Single 19
@@ -188,19 +205,27 @@ class DartBot extends DartPlayer {
         int scoreBeforeVisit = this.score;
         this.scoreThisVisit = 0;
         while (dartsInHand > 0) {
-            int currentThrow = oneDartThrow(isDoubleIn, isDoubleOut).score;
-            this.scoreThisVisit += currentThrow;
-            this.score -= currentThrow;
-            this.dartsInHand--;
-            if (this.score == 1 || this.score < 0 || (this.score == 0 
-                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn, ""))) {
-                this.score = scoreBeforeVisit;
-                this.dartThrow(0, isDoubleOut, 3);
-                print("Bust score!, needed $scoreBeforeVisit scored ${this.scoreThisVisit}"); // Removed for QuickSims
-                return false;
-            } else if ((this.score) == 0) {
-                break;
-            }
+          if (needsToDoubleIn && scoreThisVisit > 0) {
+            needsToDoubleIn = false;
+          }
+          ({ThrowTarget hit, ThrowTarget target}) throwResult = oneDartThrow(needsToDoubleIn, isDoubleOut);
+
+          int scored = throwResult.hit.multiplier * throwResult.hit.number;
+          if (needsToDoubleIn && throwResult.hit.multiplier != 2) {
+            scored = 0;
+          }
+          this.scoreThisVisit += scored;
+          this.score -= scored;
+          this.dartsInHand--;
+          if (this.score == 1 || this.score < 0 || (this.score == 0 
+                                                    && !checkLegalDoubleScore(this.scoreThisVisit, needsToDoubleIn, ""))) {
+              this.score = scoreBeforeVisit;
+              this.dartThrow(0, isDoubleOut, 3);
+              print("Bust score!, needed $scoreBeforeVisit scored ${this.scoreThisVisit}"); // Removed for QuickSims
+              return false;
+          } else if ((this.score) == 0) {
+              break;
+          }
         }
 
         this.dartThrow(this.scoreThisVisit, isDoubleOut, 3 - dartsInHand);
@@ -211,7 +236,7 @@ class DartBot extends DartPlayer {
 
     }
 
-  Future<bool> visualVisitThrow(bool isDoubleIn, bool isDoubleOut, BuildContext context, {VoidCallback? onComplete}) async {
+  Future<bool> visualVisitThrow(bool needsToDoubleIn, bool isDoubleOut, BuildContext context, {VoidCallback? onComplete}) async {
     dartsInHand = 3;
     int dartsThrownVisit = 0;
     int scoreBeforeVisit = score;
@@ -232,8 +257,17 @@ class DartBot extends DartPlayer {
               while (dartsInHand > 0 && dartsThrownVisit < 3) {
                 await Future.delayed(const Duration(seconds: 1)); // simulate delay between throws
 
-                ({int score, ThrowTarget target}) throwResult = oneDartThrow(isDoubleIn, isDoubleOut);
-                int currentThrow = throwResult.score;
+                if (needsToDoubleIn && scoreThisVisit > 0) {
+                  needsToDoubleIn = false;
+                }
+                ({ThrowTarget hit, ThrowTarget target}) throwResult = oneDartThrow(needsToDoubleIn, isDoubleOut);
+
+                int scored = throwResult.hit.multiplier * throwResult.hit.number;
+                if (needsToDoubleIn && throwResult.hit.multiplier != 2) {
+                  scored = 0;
+                }
+                
+                int currentThrow = scored;
                 ThrowTarget targetThisThrow = throwResult.target;
                 scoreThisVisit += currentThrow;
 
@@ -249,7 +283,7 @@ class DartBot extends DartPlayer {
 
                 setState(() {}); // 👀 Trigger rebuild to update UI
 
-                if (score == 1 || score < 0 || (score == 0 && !checkLegalDoubleScore(scoreThisVisit, isDoubleIn, ""))) {
+                if (score == 1 || score < 0 || (score == 0 && !checkLegalDoubleScore(scoreThisVisit, true, ""))) {
                   score = scoreBeforeVisit;
                   dartThrow(0, isDoubleOut, 3);
                   print("Bust score!");
@@ -305,8 +339,10 @@ class DartBot extends DartPlayer {
     return true;
   }
 
-    ({int score, ThrowTarget target}) oneDartThrow(bool isDoubleIn, bool isDoubleOut) {
-        ThrowTarget target = getThrowTarget(isDoubleIn, isDoubleOut);
+    ({ThrowTarget hit, ThrowTarget target}) oneDartThrow(bool needsToDoubleIn, bool isDoubleOut) {
+        
+        
+        ThrowTarget target = getThrowTarget(needsToDoubleIn, isDoubleOut);
         DistributionTable distroTable;
         if (target.number == 25) {
             distroTable = this.distroTables[3];
@@ -325,7 +361,7 @@ class DartBot extends DartPlayer {
         }
 
         int rng = Random().nextInt(1000); 
-        return (score: distroTable.getThrowResult(rng, target.number), 
+        return (hit: distroTable.getThrowResult(rng, target.number), 
                 target: target);
     }
 
