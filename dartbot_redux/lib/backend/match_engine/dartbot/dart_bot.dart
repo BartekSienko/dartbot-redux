@@ -329,14 +329,6 @@ class DartBot extends DartPlayer {
                 target: target);
     }
 
-    @override
-    String toString() {
-      return "DartBot ($name, $rating)";
-    }
-
-
-
-
 }
 
 

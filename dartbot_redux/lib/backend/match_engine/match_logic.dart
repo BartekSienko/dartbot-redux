@@ -11,6 +11,23 @@ class MatchLogic {
 
   MatchLogic(this.startScore, this.legLimit, this.isSetPlay, this.setLimit, this.doubleOut, this.doubleIn, this.winBy2);
 
+  factory MatchLogic.fromString(String s) {
+    s = s.replaceAll('(', '').replaceAll(')', '');
+    List<String> p = s.split(',').map((v) => v.trim()).toList();
+
+    bool parseBool(String s) => s.toLowerCase() == "true";
+
+
+    return MatchLogic(
+      int.parse(p[0]),
+      int.parse(p[1]),
+      parseBool(p[2]),
+      int.parse(p[3]),
+      parseBool(p[4]),
+      parseBool(p[5]),
+      parseBool(p[6]),
+    );
+  }
 
   int getStartScore() {
     return startScore;
