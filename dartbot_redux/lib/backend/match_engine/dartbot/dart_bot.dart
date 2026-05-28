@@ -252,6 +252,10 @@ class DartBot extends DartPlayer {
                 ThrowTarget targetThisThrow = throwResult.target;
                 scoreThisVisit += currentThrow;
 
+                if (isDoubleIn && currentThrow != throwResult.target.multiplier * throwResult.target.number) {
+                  currentThrow = 0;
+                }
+
                 // ✅ Safe assignment to list
                 if (dartsThrownVisit < scoresThisVisit.length) {
                   scoresThisVisit[dartsThrownVisit] = currentThrow;
