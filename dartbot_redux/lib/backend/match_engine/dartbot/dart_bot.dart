@@ -39,12 +39,26 @@ class DartBot extends DartPlayer {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
 
-        /**
+        if (isDoubleIn && remainingScore == 301) {
+            double doubleRNG = Random().nextDouble();
+            int aimedDouble;
+            // Decides on Double 20, 18 or 16
+            if (doubleRNG >= 0.33) { 
+                aimedDouble = 20; 
+            } else if (doubleRNG >= 0.66) { 
+                aimedDouble = 18;
+            } else {
+                aimedDouble = 16;
+            }
+          
+          return ThrowTarget(2, aimedDouble);
+        }
+        
         if (!isDoubleOut && remainingScore <= 20) {
           print("Looked here");
           return ThrowTarget(1, remainingScore);
         }
-        */
+  
         
         if (this.dartsInHand == 3 && remainingScore % 3 == 0 && (123 <= remainingScore && remainingScore <= 129)) {
             // Aims for Treble 19 to leave (Treble + Bull) finish if it hits Single 19
@@ -189,6 +203,7 @@ class DartBot extends DartPlayer {
         this.scoreThisVisit = 0;
         while (dartsInHand > 0) {
             int currentThrow = oneDartThrow(isDoubleIn, isDoubleOut).score;
+            if (isDoubleIn && this.score == 301 && currentThrow != 40 && currentThrow != 36 && currentThrow != 32) currentThrow == 0;
             this.scoreThisVisit += currentThrow;
             this.score -= currentThrow;
             this.dartsInHand--;
@@ -325,7 +340,9 @@ class DartBot extends DartPlayer {
         }
 
         int rng = Random().nextInt(1000); 
-        return (score: distroTable.getThrowResult(rng, target.number), 
+        int rngscore = distroTable.getThrowResult(rng, target.number);
+        if (isDoubleIn && this.score == 301 && target.multiplier != 2) rngscore = 0;
+        return (score: rngscore, 
                 target: target);
     }
 

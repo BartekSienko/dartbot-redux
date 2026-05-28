@@ -58,6 +58,17 @@ class PlayerMatchStats {
   return (sum / dartsThrown * 30.0).round() / 10.0;
 }
 
+int getAllValues(List<int> list) {
+  if (list.isEmpty) {
+    return 0;
+  }
+  int sum = 0;
+  for (int i in list) {
+    sum += i;
+  }
+  return sum;
+}
+
 String getCheckoutSplit() {
   return '$doublesSucceeded/$doublesAttempted';
 }

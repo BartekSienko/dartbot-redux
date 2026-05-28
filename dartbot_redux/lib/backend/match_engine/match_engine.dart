@@ -250,7 +250,7 @@ class MatchEngine extends ChangeNotifier{
 
     if (player1.legs >= matchRules.getLegLimit()) {
       bool leadingBy2 = !matchRules.winBy2 || (player1.legs - player2.legs > 1);
-      bool isSuddenDeath = player1.legs >= (matchRules.legLimit + 3);
+      bool isSuddenDeath = player1.legs >= (matchRules.legLimit + 4);
         if (!isLastSet || (leadingBy2 || isSuddenDeath)) {
             player1.sets++;
             player1.legs = 0;
@@ -260,7 +260,7 @@ class MatchEngine extends ChangeNotifier{
           }
         } else if (player2.legs >= matchRules.getLegLimit()) {
           bool leadingBy2 = !matchRules.winBy2 || (player2.legs - player1.legs > 1);
-          bool isSuddenDeath = player2.legs >= (matchRules.legLimit + 3);
+          bool isSuddenDeath = player2.legs >= (matchRules.legLimit + 4);
             if (!isLastSet || (leadingBy2 || isSuddenDeath)) {
                 player2.sets++;
                 player2.legs = 0;
@@ -315,6 +315,9 @@ class MatchEngine extends ChangeNotifier{
         generateStatRow(p1Stats.getHighestFromList(p1Stats.checkouts).toString(), "High. Out", p2Stats.getHighestFromList(p2Stats.checkouts).toString()),
         generateStatRow(p1Stats.bestLeg.toString(), "Best Leg", p2Stats.bestLeg.toString()),
         generateStatRow(p1Stats.worstLeg.toString(), "Worst Leg", p2Stats.worstLeg.toString()),
+        generateStatRow(p1Stats.dartsThrown.toString(), "DartsThrown", p2Stats.dartsThrown.toString()),
+        generateStatRow(p1Stats.getAllValues(p1Stats.scores).toString(), "Points Thrown", p2Stats.getAllValues(p2Stats.scores).toString()),
+
       
         ]);
   }
