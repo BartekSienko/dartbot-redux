@@ -17,6 +17,14 @@ class DartPlayer {
     //prizeMoney = OverallPrizeMoney();
   }
 
+  factory DartPlayer.fromString(String s) {
+    s = s.replaceAll('(', '').replaceAll(')', '');
+    List<String> parts = s.split(',');
+    String name = parts[0].trim();
+    double rating = double.parse(parts[1].trim());
+    return DartPlayer(name, rating);
+  }
+
   void dartThrow(int pointsScored, bool isDoubleOut, int dartsAtCheckout) {
     if (score == 0) {
       stats.addCheckout(pointsScored, dartsAtCheckout);

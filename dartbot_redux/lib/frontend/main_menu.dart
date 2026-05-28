@@ -100,6 +100,34 @@ class _MainMenuState extends State<MainMenu> {
   }
   
   
+  List<DartPlayer> dartPlayersFromString(String csvString) {
+  final lines = csvString.trim().split('\n');
+
+  // Remove header "Name,Rating"
+  if (lines.isNotEmpty) {
+    lines.removeAt(0);
+  }
+
+  return lines
+      .map((line) => line.trim())
+      .where((line) => line.isNotEmpty)
+      .map((line) {
+        final parts = line.split(',');
+
+        if (parts.length != 2) {
+          throw FormatException("Invalid line in player list: $line");
+        }
+
+        final name = parts[0].trim();
+        final rating = double.parse(parts[1].trim());
+
+        return DartPlayer(name, rating / 10);
+      })
+      .toList();
+}
+
+
+
   //TODO: Stub function while testing on a already existing Tournament
   Tournament genTournament(){
   List<DartPlayer> round1 = [DartPlayer("N. Aspinall", 12),
@@ -110,7 +138,7 @@ class _MainMenuState extends State<MainMenu> {
                              DartPlayer("G. Price", 14)]; 
   List<DartPlayer> round3 = [DartPlayer("L. Humphries", 15),
                              DartPlayer("M. van Gerwen", 14)]; 
-
+                           
   List<List<DartPlayer>> players = [round1, round2, round3];
 
 
