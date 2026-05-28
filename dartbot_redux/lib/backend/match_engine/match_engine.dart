@@ -33,8 +33,8 @@ class MatchEngine extends ChangeNotifier{
     WidgetsBinding.instance.addPostFrameCallback((_) async {
     if (player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
-      await p1.visualVisitThrow(matchRules.doubleOut, 
-                            matchRules.doubleIn, context!, onComplete: () {
+      await p1.visualVisitThrow(needsToDoubleIn(p1), 
+                            matchRules.doubleOut, context!, onComplete: () {
       checkForFinishedLeg();
       notifyListeners();
       throwing = 2;
@@ -113,6 +113,13 @@ class MatchEngine extends ChangeNotifier{
       onThrow = nr;
   }
 
+  bool needsToDoubleIn(DartPlayer p) {
+    if (matchRules.doubleIn && matchRules.startScore == p.score) {
+      return true;
+    }
+    return false;
+  }
+
 
 
 
@@ -127,7 +134,7 @@ class MatchEngine extends ChangeNotifier{
     String errorString = "";
     bool successfulThrow = playerThrowing.visitThrow(pointsScored, 
                                                      matchRules.doubleOut, 
-                                                     matchRules.doubleIn, 
+                                                     needsToDoubleIn(playerThrowing), 
                                                      errorString);
     
     if (!successfulThrow) {
@@ -185,8 +192,8 @@ class MatchEngine extends ChangeNotifier{
   Future<void> checkForDartBot(BuildContext context) async {
     if (throwing == 1 && player1 is DartBot) {
       DartBot p1 = player1 as DartBot;
-      await p1.visualVisitThrow(matchRules.doubleOut, 
-                            matchRules.doubleIn, context, onComplete: () async {
+      await p1.visualVisitThrow(needsToDoubleIn(p1), 
+                            matchRules.doubleOut, context, onComplete: () async {
       throwing = 2;
       checkForFinishedLeg();
       notifyListeners();
@@ -195,8 +202,8 @@ class MatchEngine extends ChangeNotifier{
       });
     } else if (throwing == 2 && player2 is DartBot) {
       DartBot p2 = player2 as DartBot;
-      await p2.visualVisitThrow(matchRules.doubleOut, 
-                            matchRules.doubleIn, context, onComplete: () async {
+      await p2.visualVisitThrow(needsToDoubleIn(p2), 
+                            matchRules.doubleOut, context, onComplete: () async {
       throwing = 1;
       checkForFinishedLeg();
       notifyListeners();
